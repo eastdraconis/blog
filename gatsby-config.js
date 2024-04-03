@@ -15,6 +15,7 @@ module.exports = {
   },
   graphqlTypegen: true,
   plugins: [
+    'gatsby-plugin-netlify',
     'gatsby-plugin-image',
     {
       resolve: 'gatsby-plugin-manifest',
@@ -52,6 +53,7 @@ module.exports = {
     'gatsby-plugin-sharp',
     'gatsby-plugin-root-import',
     'gatsby-transformer-sharp',
+    `gatsby-plugin-provide-react`,
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -84,7 +86,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-gtag',
       options: {
-        trackingId: 'G-CLPTY6DFH3',
+        trackingId: 'G-Q8DZS4C2DL',
         head: true,
       },
     },
@@ -103,6 +105,6 @@ module.exports = {
         },
       },
     },
-    'gatsby-plugin-advanced-sitemap',
+    'gatsby-plugin-sitemap',
   ],
 };
