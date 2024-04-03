@@ -1,6 +1,8 @@
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+
 @font-face {
-  font-family: 'HakgyoansimWoojuR';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2')
+  font-family: 'CoolGuy-Medium';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/CoolGuy-Medium.woff2')
     format('woff2');
   font-weight: normal;
   font-style: normal;

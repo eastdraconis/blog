@@ -16,9 +16,9 @@ const style = {
     },
   },
   fonts: {
-    body: 'HakgyoansimWoojuR',
-    html: 'HakgyoansimWoojuR',
-    heading: 'HakgyoansimWoojuR',
+    body: `'Spoqa Han Sans', 'Spoqa Han Sans Neo', 'sans-serif'`,
+    html: `'Spoqa Han Sans', 'Spoqa Han Sans Neo', 'sans-serif'`,
+    heading: `'Spoqa Han Sans', 'Spoqa Han Sans Neo', 'sans-serif'`,
   },
   breakpoints: {
     sm: '320px', // 320px ~ 768px

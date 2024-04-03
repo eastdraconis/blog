@@ -65,8 +65,8 @@ const Callout = (props: CalloutProps) => {
             backgroundColor: 'rgba(251,211,141,0.1)',
             color: 'rgb(251,211,141)',
           }}
-          color='#57544D'
-          backgroundColor='rgba(251,211,141,0.1)'
+          color='#503c1a'
+          backgroundColor='rgba(252, 209, 36, 0.112)'
           wordBreak={'keep-all'}
           borderRadius='10px'
           padding='10px 15px'

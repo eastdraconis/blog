@@ -44,10 +44,23 @@ const PostCard = ({ title, slug, createdAt, description, thumbnail }: PostFrontM
             marginBottom='20px'
             wordBreak='keep-all'
             textOverflow='ellipsis'
+            color='gray.800'
+            _dark={{
+              color: 'white',
+            }}
           >
             {title}
           </Heading>
-          <Text fontSize='xl' marginBottom='10px' wordBreak={'keep-all'} textOverflow='ellipsis'>
+          <Text
+            fontSize='17px'
+            marginBottom='10px'
+            wordBreak={'keep-all'}
+            color='gray.600'
+            textOverflow='ellipsis'
+            _dark={{
+              color: 'gray.300',
+            }}
+          >
             {description}
           </Text>
           <Text color='gray.400'>{createdAt}</Text>

@@ -21,8 +21,7 @@ const About = () => {
           transformOrigin: 'bottom right',
           transform: 'scaleX(0)',
         }}
-        fontSize={16}
-        fontStyle='italic'
+        fontSize={14}
         fontWeight={'bold'}
         _dark={{
           _after: {
@@ -36,7 +35,7 @@ const About = () => {
           },
         }}
       >
-        Resume
+        RESUME
       </Text>
     </a>
   );

@@ -18,9 +18,10 @@ const Logo = () => {
           transformOrigin: 'bottom right',
           transform: 'scaleX(0)',
         }}
-        fontSize={24}
+        fontSize={32}
         fontWeight='bold'
         fontStyle={'italic'}
+        fontFamily='CoolGuy-Medium'
         _dark={{
           _after: {
             bg: 'white',

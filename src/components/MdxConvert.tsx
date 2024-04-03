@@ -76,7 +76,7 @@ const components = {
   },
   p: (props: Object) => (
     <Text
-      fontSize={{ sm: '16px', md: '18px' }}
+      fontSize={{ sm: '16px', md: '17px' }}
       mt='20px'
       wordBreak='keep-all'
       lineHeight='1.8'
@@ -133,7 +133,6 @@ const components = {
           _dark={{ borderColor: 'whiteAlpha.300', backgroundColor: 'whiteAlpha.100' }}
           borderColor={'blackAlpha.400'}
           padding='3px 4px'
-          fontFamily='ChosunGu'
         >
           {children}
         </Kbd>
