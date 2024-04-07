@@ -1,0 +1,378 @@
+---
+slug: react-accodion
+title: React Accodion 만들어보기
+description: 직접 아코디언을 react에서 만들어 봅니다, 같은 아코디언 메뉴에서 한 개만 열릴지 모두 열 수 있게 할지 기능도 추가해봅니다
+thumbnail: ../../../thumbnails/accodion.png
+tags: ['development', 'react', 'frontend']
+createdAt: '2024/04/07'
+updatedAt: ''
+---
+
+<Callout variant='primary'>
+  이전에 작성했던 Tab을 생성하는 방법에 대해서 많은 관심이 있는 것 같아서 또 다른 컴포넌트를 만드는
+  방법에 대해서 작성을 하려고 합니다.
+</Callout>
+
+<Callout variant='warn'>pandacss로 스타일링을 하고 있습니다. 참고 부탁드립니다.</Callout>
+
+## Accodion이란
+
+![](1.gif)
+
+다음과 같은 움직임을 가지는 컴포넌트를 사용해보셨거나 많이 보셨을것 같아요
+`detail`, `summary` 태그를 이용해서 만들 수 있지만 커스텀이 불편하기 때문에 직접 만들어 보도록 할게요!
+
+<Callout variant='primary' title='추가 기능'>
+  요소에 아이템을 여러개를 정의해두었을 때 한 개만 열리게 할 것인지 여러개를 열리게 할 것인지
+  옵션으로 설정할 수 있어야한다
+</Callout>
+
+## Accodion Provider
+
+먼저 Accodion에서 사용할 값들을 공유해주기 위해서 `context API`를 통해 Provider를 만들어 줄게요.
+
+공유되어야할 값은 다음과 같아요.
+
+1. type(open 타입)
+2. openIndex(열려있는 요소)
+3. handleChangeIndex(업데이트 함수)
+
+```tsx
+const AccodionContext = createContext<AccodionState | null>(null);
+
+const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
+  const [openIndex, setOpenIndex] = useState<number | number[]>(type === 'single' ? 0 : []);
+  const childrenArray = Children.toArray(children);
+
+  const handleChangeIndex = useCallback(
+    (index: number) => {
+      if (type === 'single') {
+        const isSameIndex = openIndex === index;
+        setOpenIndex(isSameIndex ? 0 : index);
+      }
+      if (type === 'multiple') {
+        // 이미 배열에 index가 있으면 제거하고 없으면 추가
+        setOpenIndex((prev) => {
+          const indexArr = prev as number[];
+          const isExist = indexArr.includes(index);
+          return isExist ? indexArr.filter((i) => i !== index) : [...indexArr, index];
+        });
+      }
+    },
+    [openIndex, type],
+  );
+
+  return (
+    <AccodionContext.Provider value={{ type, openIndex, handleChangeIndex }}>
+      <div>
+        {childrenArray.map((child, id) => cloneElement(child as ReactElement, { index: id + 1 }))}
+      </div>
+    </AccodionContext.Provider>
+  );
+};
+```
+
+현재 Accodion이 어느것이 열리는지 알기위한 `openIndex` 상태값의 초기값은 type이 `single` ` multiple` 에 따라서 달려져야 하기 때문에 처리를 해야해요
+
+선택한 Accodion의 값을 업데이트 하기 위해서 `handleChangeIndex` 함수를 만들어 주어야해요. type이 single일때와 multiple일 때 다르게 동작할 수 있도록 해주어야 해요
+
+각 AccodionItem들에 대해서 번호를 매겨주어야하기 때문에 children을 순회하면서 `cloneElement`를 이용하여 index번호를 1부터 시작하도록 하고 넘겨주어 생성하도록 해줄게요
+
+context 값을 쉽게 가져오기 위해서 다음과 같이 hook을 만들어 줄게요
+
+```tsx
+export const useAccodionState = () => {
+  const context = useContext(AccodionContext);
+  if (!context) {
+    throw new Error('useAccodionState must be used within a Accodion');
+  }
+  return context;
+};
+```
+
+## AccodionItem
+
+Accodion 메뉴를 생성할 wrap 컴포넌트입니다.
+
+웹 접근성 향상과 group을 하기위해서 id값을 생성하여 하위 컴포넌트에게 공유하고 index값을 전달하여 렌더링하는 역할을 해요
+
+```tsx
+const AccodionItem = ({ index, children }: AccodionItemProps) => {
+  const childrenArray = Children.toArray(children);
+  const id = useId();
+
+  const AccodionButtonComp = childrenArray.find(
+    (child) => isValidElement(child) && child.type === AccodionButton,
+  );
+  const AccodionPanelComp = childrenArray.find(
+    (child) => isValidElement(child) && child.type === AccodionPanel,
+  );
+
+  return (
+    <div>
+      {cloneElement(AccodionButtonComp as ReactElement, { index, id })}
+      {cloneElement(AccodionPanelComp as ReactElement, { index, id })}
+    </div>
+  );
+};
+```
+
+간단하게 Accodion을 생성하는데 필요한 Button과 Panel에 대해서 가져오고 순서배치를 하기 위해서 해당 요소들을 찾아내어 순서에 맞게 렌더링합니다.
+하위 요소도 Item과 같은 index값과 id값을 가져야 하기 때문에 props로 값을 넘겨주게 됩니다.
+
+## AccodionButton
+
+Accodion을 열고 닫기 위한 버튼이예요
+
+간단하게 버튼을 눌렀을 때 `context API`에 저장되는 현재 열려있는 값을 업데이트해주는 역할이예요
+
+```tsx
+interface AccodionButtonProps {
+  index?: number;
+  id?: string;
+  children: React.ReactNode;
+}
+
+const AccodionButton = ({ children, index, id }: AccodionButtonProps) => {
+  const { openIndex, handleChangeIndex, type } = useAccodionState();
+  const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+
+  return (
+    <h3>
+      <button
+        className={css({
+          width: '100%',
+          display: 'flex',
+          gap: '8px',
+          border: 'none',
+          padding: '16px 0',
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+          position: 'relative',
+          alignItems: 'center',
+        })}
+        onClick={() => {
+          handleChangeIndex(index!);
+        }}
+        id={id}
+        aria-expanded={isOpen}
+        aria-controls={id}
+      >
+        {children}
+        <div
+          className={css({
+            transition: 'transform 0.2s ease-in',
+            transform: isOpen ? ' rotate(180deg)' : 'rotate(0)',
+          })}
+        >
+          <Icon icon='chevron-down' width={20} height={20} iconColor='gray.300' />
+        </div>
+      </button>
+    </h3>
+  );
+};
+```
+
+h태그로 감싸주어 해당 accodion의 제목이 무엇인지 나타내주었어요
+
+상위 요소에서 받은 index값과 `context API`값에 있는 선택된 index값과 비교하여 현재 열려있는지 열려있지 않은지 확인하여 isOpen이라는 변수에 저장하고,
+`isOpen`의 값에 따라서 chevron을 상태에 따라서 방향을 돌려주고 있어요
+
+접근성을 위해서 `aria-expaned`를 통해 열려있는지 열려있지않은지 상태를 알려주고 `aria-controles`를 이용하여 어떤 panel을 컨트롤하고 있는지도 명시해줄게요
+
+button을 클릭하면 해당 Accodion의 index값을 `context API`로 공유되는 `handleChangeIndex` 함수를 통해서 값을 업데이트 해주게 돼요
+
+## Accodion Panel
+
+Accodion의 내용을 담고있는 panel이예요.
+
+```tsx
+interface AccodionPanelProps {
+  index?: number;
+  id?: string;
+  children: React.ReactNode;
+}
+
+const AccodionPanel = ({ children, index, id }: AccodionPanelProps) => {
+  const { openIndex, type } = useAccodionState();
+  const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+
+  return (
+    <div
+      className={css({
+        display: isOpen ? 'block' : 'none',
+      })}
+    >
+      <div
+        ref={panelRef}
+        aria-labelledby={id}
+        role='region'
+        className={css({ paddingBottom: '16px' })}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+```
+
+AccodionButton과 동일하게 isOpen 변수에 현재 상태값을 저장하고 있어요.
+isOpen일 때 panel을 나타내고 isOpen이 아니라면 요소를 숨깁니다.
+
+button에서 aria를 통해서 지정했던 값과 연결하기 위해서 `aria-labelledby`값을 할당해주고 있어요
+
+모든 Accodion 작업을 완료했으니 정상적으로 동작하지 않을까요?
+
+이제 사용을 해볼께요
+
+```tsx
+<Accodion type='single'>
+  <AccodionItem>
+    <AccodionButton>열기</AccodionButton>
+    <AccodionPanel>내용물</AccodionPanel>
+  </AccodionItem>
+  <AccodionItem>
+    <AccodionButton>열기2</AccodionButton>
+    <AccodionPanel>내용물</AccodionPanel>
+  </AccodionItem>
+  <AccodionItem>
+    <AccodionButton>열기3</AccodionButton>
+    <AccodionPanel>내용물</AccodionPanel>
+  </AccodionItem>
+</AccodionItem>
+```
+
+![](./2.gif)
+
+동작은 원하는대로 되고 있네요 하지만 동작하는 모습을 보면 딱딱 끊어져 보이기 때문에 부드럽게 변경이 되었으면 좋겠네요
+부드럽게 동작하도록 변경을 해보도록 할게요
+
+## 부드럽게 동작하게 만들기
+
+### animation 생성하기
+
+animation 사용을 위해서 keyframe를 생성해줄게요
+
+아코디언이 닫힐 때와 열릴 때를 만들어 주어야해요
+
+```ts
+accodionDown: {
+  from: { height: 0 },
+  to: { height: 'var(--accodion-height)' },
+},
+accodionUp: {
+  from: { height: 'var(--accodion-height)' },
+  to: { height: 0 },
+},
+```
+
+open 여부에 따라서 css변수에 저장한 높이만큼 `height`를 변경해주는 keyframe이예요.<br/>
+
+<Callout variant='warn' title='주의'>
+
+저는 pandacss이기 때문에 css 변수를 이용해야 작업이 가능하기 때문에 해당 코드를 작성하였어요 스타일링에 따라 작업을 해주세요!
+
+</Callout>
+
+### 높이 구하기
+
+요소의 높이가 얼마인지 알 수 없기 때문에 ref를 통해서 내용물이 들어있는 요소의 크기를 구해야해요
+
+```tsx
+const { openIndex, type } = useAccodionState();
+const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+const panelRef = useRef<HTMLDivElement>(null);
+
+useEffect(() => {
+  if (isOpen && panelRef.current) {
+    panelRef!.current!.parentElement!.style.display = 'block';
+    const height = panelRef.current.style.getPropertyValue('--accodion-height');
+
+    if (height === '0' || !height) {
+      panelRef.current.parentElement!.style.setProperty(
+        '--accodion-height',
+        `${panelRef.current.clientHeight}px`,
+      );
+    }
+  }
+}, [isOpen]);
+
+return (
+  <div
+    className={css({
+      display: 'none',
+    })}
+  >
+    <div
+      ref={panelRef}
+      aria-labelledby={id}
+      role='region'
+      className={css({ paddingBottom: '16px' })}
+    >
+      {children}
+    </div>
+  </div>
+);
+```
+
+`display:'none'`일 때는 높이를 알 수 없기 떄문에 isOpen여부에 따라서 `display:'block'`을 해준뒤 `--accodion-height`의 값을 가져와 값이 0이거나 없을 때
+`panelRef`를 통해서 높이를 가져와 값을 셋팅해주고 있어요
+
+## animation 적용하기
+
+높이도 구했고 keyframe도 만들었으니 적용만 하면 끝날 것 같아요
+
+```tsx
+useEffect(() => {
+  if (isOpen && panelRef.current) {
+    panelRef!.current!.parentElement!.style.display = 'block';
+    const height = panelRef.current.style.getPropertyValue('--accodion-height');
+
+    if (height === '0' || !height) {
+      panelRef.current.parentElement!.style.setProperty(
+        '--accodion-height',
+        `${panelRef.current.clientHeight}px`,
+      );
+    }
+  }
+
+  if (!isOpen && panelRef.current) {
+    setTimeout(() => {
+      panelRef!.current!.parentElement!.style.display = 'none';
+    }, 150);
+  }
+}, [isOpen]);
+
+return (
+  <div
+    className={css({
+      display: 'none',
+      overflow: 'hidden',
+      transition: 'all 0.2s cubic-bezier(.4,0,.2,1)',
+      animation: isOpen
+        ? 'accodionDown 0.2s cubic-bezier(.4,0,.2,1)'
+        : 'accodionUp 0.2s cubic-bezier(.4,0,.2,1)',
+    })}
+  >
+    <div
+      ref={panelRef}
+      aria-labelledby={id}
+      role='region'
+      className={css({ paddingBottom: '16px' })}
+    >
+      {children}
+    </div>
+  </div>
+);
+```
+
+애니메이션을 isOpen에 따라서 위에서 만들었던 animation을 변경하고 isOpen이 아닐 때 애니메이션보다 조금 일찍 `display:'none'`처리를 해줍니다.
+
+## 완성
+
+이제 테스트를 해볼까요?
+
+![](./3.gif)
+
+<br />
+![](./4.gif)
