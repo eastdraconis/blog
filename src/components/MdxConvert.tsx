@@ -3,12 +3,14 @@ import {
   ComponentDefaultProps,
   Flex,
   Heading,
+  Image,
   Kbd,
   Link,
   Text,
   textDecoration,
 } from '@chakra-ui/react';
 import { MDXProvider } from '@mdx-js/react';
+import { GatsbyImage, StaticImage } from 'gatsby-plugin-image';
 import React from 'react';
 import Callout from './Callout';
 import CodeBlock from './CodeBlock';
@@ -118,6 +120,29 @@ const components = {
       {...props}
     />
   ),
+  img: (props: any) => {
+    console.log(props);
+    return (
+      <Box>
+        <figure>
+          <Box
+            as='span'
+            display='flex'
+            justifyContent='center'
+            marginLeft='auto'
+            marginRight='auto'
+          >
+            <Link href={props.src}>
+              <Image {...props} />
+            </Link>
+          </Box>
+          <Text as='figcaption' textAlign='center' marginTop='10px' color='gray.500'>
+            {props.alt}
+          </Text>
+        </figure>
+      </Box>
+    );
+  },
   code: ({ ...props }) => {
     const { className, children } = props;
     const isCode = /language-(\w+)/.exec(className || '');
