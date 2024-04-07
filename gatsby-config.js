@@ -36,6 +36,7 @@ module.exports = {
               showCaptions: true,
             },
           },
+          'gatsby-remark-gifs',
         ],
         mdxOptions: {
           rehypePlugins: [
@@ -43,7 +44,13 @@ module.exports = {
             [
               wrapESMPlugin(`rehype-autolink-headings`),
               {
-                behavior: `after`,
+                behavior: `append`,
+                content: {
+                  type: `element`,
+                  tagName: `span`,
+                  properties: { className: `heading-anchor` },
+                  children: [{ type: `text`, value: `#` }],
+                },
               },
             ],
           ],

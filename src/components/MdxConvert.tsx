@@ -27,12 +27,13 @@ const components = {
     <Heading as='h4' fontSize='24px' mt='40px' pt='70px' mb='20px' {...props}></Heading>
   ),
   a: (props: any) => {
+    const ariaHidden = props['aria-hidden'];
     const { children, ...rest } = props;
     return (
       <Link
         fontWeight={700}
         color='blue.400'
-        target='_blank'
+        target={!ariaHidden && '_blank'}
         _hover={{ textDecoration: 'none' }}
         {...rest}
       >

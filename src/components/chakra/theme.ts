@@ -8,6 +8,16 @@ const style = {
         marginTop: '10px',
         color: 'gray.500',
       },
+      'h1:hover .heading-anchor, h2:hover .heading-anchor, h3:hover .heading-anchor, h4:hover .heading-anchor':
+        {
+          opacity: 1,
+        },
+      '.heading-anchor': {
+        marginLeft: '10px',
+        opacity: 0,
+        color: 'blue.400',
+        transition: 'all 0.2s ease-in-out',
+      },
     },
   },
   colors: {
