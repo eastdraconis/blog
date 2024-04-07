@@ -36,6 +36,7 @@ module.exports = {
               showCaptions: true,
             },
           },
+
           'gatsby-remark-gifs',
         ],
         mdxOptions: {
@@ -101,7 +102,7 @@ module.exports = {
       resolve: 'gatsby-plugin-robots-txt',
       options: {
         host: 'https://handongryong.com',
-        sitemap: 'https://handongryong.com/sitemap.xml',
+        sitemap: 'https://handongryong.com/sitemap-index.xml',
         env: {
           development: {
             policy: [{ userAgent: '*', disallow: ['/'] }],
