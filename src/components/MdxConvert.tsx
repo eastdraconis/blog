@@ -123,7 +123,7 @@ const components = {
   img: (props: any) => {
     console.log(props);
     return (
-      <Box>
+      <Box margin='16px 0'>
         <figure>
           <Box
             as='span'

@@ -1,0 +1,213 @@
+---
+slug: react-checkbox
+title: React에서 UI 라이브러리를 사용하지 않고 Checkbox 만들기
+description: React에서 UI 라이브러리를 사용하지 않고 Checkbox 만들어봅니다.
+thumbnail: ../../../../thumbnails/checkbox.png
+tags: ['development', 'react', 'frontend']
+createdAt: '2024/04/08'
+updatedAt: ''
+---
+
+<Callout variant='warn' title='시작하기 전'>
+  Styling은 pandacss로 작성되어있습니다. 스타일링 부분까지 올려드리니 사용하시는 도구에 맞게
+  설정하시면 됩니다
+</Callout>
+
+## 구현 모습
+
+최종적으로 만들 Checkbox의 모양은 다음과 같아요
+
+![With Label And Description](./1.gif)
+![With Label](./2.gif)
+![Normal](./3.gif)
+
+## 기능 정의하기
+
+> 위에서 본 모습을 봤을 때 필요한 기능과 추가 기능을 먼저 작성해볼게요!
+
+1. checkbox의 형태만으로도 사용할 수 있어야한다
+2. Label과 description에 따라서 checkbox옆에 추가되어야한다
+3. label을 눌러도 체크가 되어야한다
+4. hover시 backgroundColor가 변경되어야한다.
+5. focus시 checkbox에 표기가 되며 스페이스바로 선택이 가능해야한다
+6. Ref로 접근 가능해야한다
+
+## Props Type
+
+먼저 사용할 때 받을 props에 대해서 type을 지정해볼게요
+
+label과 description에 따라서 표기를 해야하기 때문에 두가지의 값을 받도록 할께요
+
+```ts
+interface CheckboxProps extends React.ComponentPropsWithRef<'input'> {
+  label?: string;
+  description?: string;
+}
+```
+
+## 컴포넌트 구조
+
+checkbox의 경우에는 크게 다룰 부분이 없고 스타일링이 대부분인 것 같아서 먼저 구조를 보여드리도록 할게요
+
+```tsx
+const Checkbox = forwardRef(function Checkbox(
+  { description, label, ...prop }: CheckboxProps,
+  ref: ForwardedRef<HTMLInputElement>,
+) {
+  const id = useId();
+  return (
+    <label
+      className={css(checkboxLabelStyle, {
+        padding: label ? '4px 8px' : '',
+      })}
+      htmlFor={id}
+    >
+      <input className={`${inputStyle} peer`} type='checkbox' id={id} ref={ref} {...prop} />
+      <span className={checkboxStyle}>
+        <Icon
+          icon='check'
+          width={16}
+          height={16}
+          _css={{
+            strokeWidth: 3,
+            stroke: 'gray.500',
+          }}
+        />
+      </span>
+      {label && (
+        <div className={checkboxDescriptionWrapStyle}>
+          <Text fontStyle='label100' fontWeight='medium' color='gray.900'>
+            {label}
+          </Text>
+          {description && (
+            <Text fontStyle='label200' fontWeight='medium' color='gray.500'>
+              {description}
+            </Text>
+          )}
+        </div>
+      )}
+    </label>
+  );
+});
+```
+
+`forwardRef`를 사용하여 ref로 접근이 가능하도록 하였어요.
+
+checkbox의 모든 부분을 클릭해도 check가 되어야하기 때문에 가장 겉에 label로 감싸주었어요 `htmlFor`은 현재로써는 굳이 작성을 하지 않아도 문제없이 동작합니다. id값의 경우에는 react에서 제공하는 `useId`를 통해 유니크한 값을 가져와 할당해주었어요
+
+저는 Icon으로 checkbox를 표시하기 때문에 해당 코드가있고 label과 description에 따라서 `Text` 컴포넌트를 통해 렌더링해주고 있어요
+
+**끝!**
+
+> 생각보다 너무 뭐가 없다...
+
+그래도 아직 스타일링이 남아있죠 😄😄
+
+## Styling
+
+먼저 가장 바깥쪽부터 차근차근 살펴볼게요
+
+### Label
+
+가장 바깥쪽에있는 label tag의 스타일링이예요
+
+```ts
+const checkboxLabelStyle = {
+  width: 'fit-content',
+  position: 'relative',
+  display: 'flex',
+  cursor: 'pointer',
+  gap: '8px',
+  borderRadius: '8px',
+  WebkitTapHighlightColor: 'transparent',
+  '@media (hover: hover) and (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: 'gray.25',
+    },
+  },
+};
+```
+
+특별한 것은 안보이고 pointer가 있을 때 hover시 배경색상을 바꾸어 주고 있네요
+
+### Input
+
+입력이 되는 input 부분입니다
+
+```ts
+const inputStyle = css({
+  width: '1px',
+  appearance: 'none',
+  height: '1px',
+  position: 'absolute',
+  alignSelf: 'flex-start',
+  outline: 'none',
+  border: 'none',
+  margin: '0',
+});
+```
+
+input을 그대로 사용하지 않기 때문에 안보이도록 숨겨주었어요
+
+### checkbox
+
+checkbox의 주가 되는 부분입니다
+
+```ts
+const checkboxStyle = css({
+  width: 'fit-content',
+  height: 'fit-content',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  border: `2px solid`,
+  backgroundColor: 'white',
+  borderColor: 'gray.500',
+  boxShadowColor: 'blue.500',
+  _peerChecked: {
+    borderColor: 'blue.500',
+    backgroundColor: 'blue.500',
+    '& > svg': {
+      stroke: 'white',
+      backgroundColor: 'blue.500',
+    },
+  },
+  _peerFocusVisible: {
+    boxShadow: `0 0 0 3px var(--shadow-color)`,
+    shadowColor: 'blue.500',
+  },
+});
+```
+
+input에 인접해있는 span 태그에 들어갈 스타일이예요.
+Icon 컴포넌트의 경우 체크표시만을 가지고있기 때문에 border를 통해 박스처럼 만들고 있어요.
+
+> `_peerChecked` `_peerFocusVisible` 부분을 처음 보실 수 있는데요, pandacss에서 제공하는 기능입니다.<br/>
+> 형제위치에 있고 먼저 위치하고 있는 요소에 `peer`를 할당하면, 지금 이 코드처럼 `_peerChecked` `_peerFocusVisible`을 사용할 수 있습니다.<br/> > `tailwindcss`에서도 동일하게 지원하는 것으로 알 고 있어요. 부모에대해서 알 수 있는 `group`도 있어요!
+
+간단하게 코드를 살펴보면 `peer`가 checked일때와 focusVisible일 때 스타일링을 하고 있어요
+
+### descriptionWrap
+
+Label과 description의 레이아웃을 잡기 위한 div styling이예요
+
+```ts
+const checkboxDescriptionWrapStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  gap: '8px',
+  outline: 'none',
+  alignSelf: 'flex-start',
+  alignItems: 'flex-start',
+  cursor: 'pointer',
+});
+```
+
+## 마치며
+
+checkbox는 어렵고 귀찮은 작업없이 간단하게 할 수 있었어요!
+
+추후에는 Group화하는 `CheckboxGroup`을 만들면 좋을 것 같네요
