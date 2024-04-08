@@ -278,7 +278,7 @@ open 여부에 따라서 css변수에 저장한 높이만큼 `height`를 변경�
 
 ```tsx
 const { openIndex, type } = useAccodionState();
-const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+const isOpen = openIndex.has(index!);
 const panelRef = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
