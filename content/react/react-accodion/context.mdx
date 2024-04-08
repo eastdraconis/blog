@@ -41,25 +41,23 @@ updatedAt: ''
 const AccodionContext = createContext<AccodionState | null>(null);
 
 const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
-  const [openIndex, setOpenIndex] = useState<number | number[]>(type === 'single' ? 0 : []);
+  const [openIndex, setOpenIndex] = useState<Set<number>>(new Set());
   const childrenArray = Children.toArray(children);
 
   const handleChangeIndex = useCallback(
     (index: number) => {
-      if (type === 'single') {
-        const isSameIndex = openIndex === index;
-        setOpenIndex(isSameIndex ? 0 : index);
+      const newOpenIndex = new Set([...openIndex]);
+
+      if (newOpenIndex.has(index)) {
+        newOpenIndex.delete(index);
+        setOpenIndex(newOpenIndex);
+        return;
       }
-      if (type === 'multiple') {
-        // 이미 배열에 index가 있으면 제거하고 없으면 추가
-        setOpenIndex((prev) => {
-          const indexArr = prev as number[];
-          const isExist = indexArr.includes(index);
-          return isExist ? indexArr.filter((i) => i !== index) : [...indexArr, index];
-        });
-      }
+
+      newOpenIndex.add(index);
+      setOpenIndex(newOpenIndex);
     },
-    [openIndex, type],
+    [openIndex],
   );
 
   return (
@@ -72,9 +70,9 @@ const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
 };
 ```
 
-현재 Accodion이 어느것이 열리는지 알기위한 `openIndex` 상태값의 초기값은 type이 `single` ` multiple` 에 따라서 달려져야 하기 때문에 처리를 해야해요
+현재 Accodion이 어느것이 열리는지 알기위한 `openIndex` 상태값을 만들어 줬어요 Set자료구조를 통해서 열린 Accodion을 저장해요.
 
-선택한 Accodion의 값을 업데이트 하기 위해서 `handleChangeIndex` 함수를 만들어 주어야해요. type이 single일때와 multiple일 때 다르게 동작할 수 있도록 해주어야 해요
+선택한 Accodion의 값을 업데이트 하기 위해서 `handleChangeIndex` 함수를 만들어 주어야해요. 이미 있으면 삭제를 없으면 추가해줘요.
 
 각 AccodionItem들에 대해서 번호를 매겨주어야하기 때문에 children을 순회하면서 `cloneElement`를 이용하여 index번호를 1부터 시작하도록 하고 넘겨주어 생성하도록 해줄게요
 
@@ -135,7 +133,7 @@ interface AccodionButtonProps {
 
 const AccodionButton = ({ children, index, id }: AccodionButtonProps) => {
   const { openIndex, handleChangeIndex, type } = useAccodionState();
-  const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+  const isOpen = openIndex.has(index!);
 
   return (
     <h3>
@@ -195,7 +193,7 @@ interface AccodionPanelProps {
 
 const AccodionPanel = ({ children, index, id }: AccodionPanelProps) => {
   const { openIndex, type } = useAccodionState();
-  const isOpen = type === 'single' ? openIndex === index : (openIndex as number[]).includes(index!);
+  const isOpen = openIndex.has(index!);
 
   return (
     <div
