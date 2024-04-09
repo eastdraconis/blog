@@ -46,18 +46,29 @@ const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
 
   const handleChangeIndex = useCallback(
     (index: number) => {
-      const newOpenIndex = new Set([...openIndex]);
-
-      if (newOpenIndex.has(index)) {
-        newOpenIndex.delete(index);
-        setOpenIndex(newOpenIndex);
+      if (type === 'single') {
+        if (openIndex === index) {
+          setOpenIndex(0);
+          return;
+        }
+        setOpenIndex(index);
         return;
       }
 
-      newOpenIndex.add(index);
-      setOpenIndex(newOpenIndex);
+      if (type === 'multiple') {
+        const newOpenIndex = new Set([...(openIndex as Set<number>)]);
+
+        if (newOpenIndex.has(index)) {
+          newOpenIndex.delete(index);
+          setOpenIndex(newOpenIndex);
+          return;
+        }
+
+        newOpenIndex.add(index);
+        setOpenIndex(newOpenIndex);
+      }
     },
-    [openIndex],
+    [openIndex, type],
   );
 
   return (
@@ -133,7 +144,7 @@ interface AccodionButtonProps {
 
 const AccodionButton = ({ children, index, id }: AccodionButtonProps) => {
   const { openIndex, handleChangeIndex, type } = useAccodionState();
-  const isOpen = openIndex.has(index!);
+  const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 
   return (
     <h3>
@@ -193,7 +204,7 @@ interface AccodionPanelProps {
 
 const AccodionPanel = ({ children, index, id }: AccodionPanelProps) => {
   const { openIndex, type } = useAccodionState();
-  const isOpen = openIndex.has(index!);
+  const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 
   return (
     <div
@@ -278,7 +289,7 @@ open 여부에 따라서 css변수에 저장한 높이만큼 `height`를 변경�
 
 ```tsx
 const { openIndex, type } = useAccodionState();
-const isOpen = openIndex.has(index!);
+const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 const panelRef = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
