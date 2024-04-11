@@ -1,8 +1,8 @@
 ---
-slug: react-accodion
-title: React에서 UI 라이브러리를 사용하지 않고 Accodion 만들기
-description: React에서 UI 라이브러리를 사용하지 않고 Accodion를 만들어봅니다, 같은 아코디언 메뉴에서 한 개만 열릴지 모두 열 수 있게 할지 기능도 추가해봅니다
-thumbnail: ../../../thumbnails/accodion.png
+slug: react-accordion
+title: React에서 UI 라이브러리를 사용하지 않고 Accordion 만들기
+description: React에서 UI 라이브러리를 사용하지 않고 Accordion를 만들어봅니다, 같은 아코디언 메뉴에서 한 개만 열릴지 모두 열 수 있게 할지 기능도 추가해봅니다
+thumbnail: ../../../thumbnails/accordion.png
 tags: ['development', 'react', 'frontend']
 createdAt: '2024/04/07'
 updatedAt: ''
@@ -15,7 +15,7 @@ updatedAt: ''
 
 <Callout variant='warn'>pandacss로 스타일링을 하고 있습니다. 참고 부탁드립니다.</Callout>
 
-## Accodion이란
+## Accordion이란
 
 ![ChakraUI](1.gif)
 
@@ -27,9 +27,9 @@ updatedAt: ''
   옵션으로 설정할 수 있어야한다
 </Callout>
 
-## Accodion Provider
+## Accordion Provider
 
-먼저 Accodion에서 사용할 값들을 공유해주기 위해서 `context API`를 통해 Provider를 만들어 줄게요.
+먼저 Accordion에서 사용할 값들을 공유해주기 위해서 `context API`를 통해 Provider를 만들어 줄게요.
 
 공유되어야할 값은 다음과 같아요.
 
@@ -38,9 +38,9 @@ updatedAt: ''
 3. handleChangeIndex(업데이트 함수)
 
 ```tsx
-const AccodionContext = createContext<AccodionState | null>(null);
+const AccordionContext = createContext<AccordionState | null>(null);
 
-const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
+const Accordion = ({ type = 'single', children, ...props }: AccordionProps) => {
   const [openIndex, setOpenIndex] = useState<Set<number>>(new Set());
   const childrenArray = Children.toArray(children);
 
@@ -72,78 +72,78 @@ const Accodion = ({ type = 'single', children, ...props }: AccodionProps) => {
   );
 
   return (
-    <AccodionContext.Provider value={{ type, openIndex, handleChangeIndex }}>
+    <AccordionContext.Provider value={{ type, openIndex, handleChangeIndex }}>
       <div>
         {childrenArray.map((child, id) => cloneElement(child as ReactElement, { index: id + 1 }))}
       </div>
-    </AccodionContext.Provider>
+    </AccordionContext.Provider>
   );
 };
 ```
 
-현재 Accodion이 어느것이 열리는지 알기위한 `openIndex` 상태값을 만들어 줬어요 Set자료구조를 통해서 열린 Accodion을 저장해요.
+현재 Accordion이 어느것이 열리는지 알기위한 `openIndex` 상태값을 만들어 줬어요 Set자료구조를 통해서 열린 Accordion을 저장해요.
 
-선택한 Accodion의 값을 업데이트 하기 위해서 `handleChangeIndex` 함수를 만들어 주어야해요. 이미 있으면 삭제를 없으면 추가해줘요.
+선택한 Accordion의 값을 업데이트 하기 위해서 `handleChangeIndex` 함수를 만들어 주어야해요. 이미 있으면 삭제를 없으면 추가해줘요.
 
-각 AccodionItem들에 대해서 번호를 매겨주어야하기 때문에 children을 순회하면서 `cloneElement`를 이용하여 index번호를 1부터 시작하도록 하고 넘겨주어 생성하도록 해줄게요
+각 AccordionItem들에 대해서 번호를 매겨주어야하기 때문에 children을 순회하면서 `cloneElement`를 이용하여 index번호를 1부터 시작하도록 하고 넘겨주어 생성하도록 해줄게요
 
 context 값을 쉽게 가져오기 위해서 다음과 같이 hook을 만들어 줄게요
 
 ```tsx
-export const useAccodionState = () => {
-  const context = useContext(AccodionContext);
+export const useAccordionState = () => {
+  const context = useContext(AccordionContext);
   if (!context) {
-    throw new Error('useAccodionState must be used within a Accodion');
+    throw new Error('useAccordionState must be used within a Accordion');
   }
   return context;
 };
 ```
 
-## AccodionItem
+## AccordionItem
 
-Accodion 메뉴를 생성할 wrap 컴포넌트입니다.
+Accordion 메뉴를 생성할 wrap 컴포넌트입니다.
 
 웹 접근성 향상과 group을 하기위해서 id값을 생성하여 하위 컴포넌트에게 공유하고 index값을 전달하여 렌더링하는 역할을 해요
 
 ```tsx
-const AccodionItem = ({ index, children }: AccodionItemProps) => {
+const AccordionItem = ({ index, children }: AccordionItemProps) => {
   const childrenArray = Children.toArray(children);
   const id = useId();
 
-  const AccodionButtonComp = childrenArray.find(
-    (child) => isValidElement(child) && child.type === AccodionButton,
+  const AccordionButtonComp = childrenArray.find(
+    (child) => isValidElement(child) && child.type === AccordionButton,
   );
-  const AccodionPanelComp = childrenArray.find(
-    (child) => isValidElement(child) && child.type === AccodionPanel,
+  const AccordionPanelComp = childrenArray.find(
+    (child) => isValidElement(child) && child.type === AccordionPanel,
   );
 
   return (
     <div>
-      {cloneElement(AccodionButtonComp as ReactElement, { index, id })}
-      {cloneElement(AccodionPanelComp as ReactElement, { index, id })}
+      {cloneElement(AccordionButtonComp as ReactElement, { index, id })}
+      {cloneElement(AccordionPanelComp as ReactElement, { index, id })}
     </div>
   );
 };
 ```
 
-간단하게 Accodion을 생성하는데 필요한 Button과 Panel에 대해서 가져오고 순서배치를 하기 위해서 해당 요소들을 찾아내어 순서에 맞게 렌더링합니다.
+간단하게 Accordion을 생성하는데 필요한 Button과 Panel에 대해서 가져오고 순서배치를 하기 위해서 해당 요소들을 찾아내어 순서에 맞게 렌더링합니다.
 하위 요소도 Item과 같은 index값과 id값을 가져야 하기 때문에 props로 값을 넘겨주게 됩니다.
 
-## AccodionButton
+## AccordionButton
 
-Accodion을 열고 닫기 위한 버튼이예요
+Accordion을 열고 닫기 위한 버튼이예요
 
 간단하게 버튼을 눌렀을 때 `context API`에 저장되는 현재 열려있는 값을 업데이트해주는 역할이예요
 
 ```tsx
-interface AccodionButtonProps {
+interface AccordionButtonProps {
   index?: number;
   id?: string;
   children: React.ReactNode;
 }
 
-const AccodionButton = ({ children, index, id }: AccodionButtonProps) => {
-  const { openIndex, handleChangeIndex, type } = useAccodionState();
+const AccordionButton = ({ children, index, id }: AccordionButtonProps) => {
+  const { openIndex, handleChangeIndex, type } = useAccordionState();
   const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 
   return (
@@ -182,28 +182,28 @@ const AccodionButton = ({ children, index, id }: AccodionButtonProps) => {
 };
 ```
 
-h태그로 감싸주어 해당 accodion의 제목이 무엇인지 나타내주었어요
+h태그로 감싸주어 해당 accordion의 제목이 무엇인지 나타내주었어요
 
 상위 요소에서 받은 index값과 `context API`값에 있는 선택된 index값과 비교하여 현재 열려있는지 열려있지 않은지 확인하여 isOpen이라는 변수에 저장하고,
 `isOpen`의 값에 따라서 chevron을 상태에 따라서 방향을 돌려주고 있어요
 
 접근성을 위해서 `aria-expaned`를 통해 열려있는지 열려있지않은지 상태를 알려주고 `aria-controles`를 이용하여 어떤 panel을 컨트롤하고 있는지도 명시해줄게요
 
-button을 클릭하면 해당 Accodion의 index값을 `context API`로 공유되는 `handleChangeIndex` 함수를 통해서 값을 업데이트 해주게 돼요
+button을 클릭하면 해당 Accordion의 index값을 `context API`로 공유되는 `handleChangeIndex` 함수를 통해서 값을 업데이트 해주게 돼요
 
-## Accodion Panel
+## Accordion Panel
 
-Accodion의 내용을 담고있는 panel이예요.
+Accordion의 내용을 담고있는 panel이예요.
 
 ```tsx
-interface AccodionPanelProps {
+interface AccordionPanelProps {
   index?: number;
   id?: string;
   children: React.ReactNode;
 }
 
-const AccodionPanel = ({ children, index, id }: AccodionPanelProps) => {
-  const { openIndex, type } = useAccodionState();
+const AccordionPanel = ({ children, index, id }: AccordionPanelProps) => {
+  const { openIndex, type } = useAccordionState();
   const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 
   return (
@@ -225,30 +225,30 @@ const AccodionPanel = ({ children, index, id }: AccodionPanelProps) => {
 };
 ```
 
-AccodionButton과 동일하게 isOpen 변수에 현재 상태값을 저장하고 있어요.
+AccordionButton과 동일하게 isOpen 변수에 현재 상태값을 저장하고 있어요.
 isOpen일 때 panel을 나타내고 isOpen이 아니라면 요소를 숨깁니다.
 
 button에서 aria를 통해서 지정했던 값과 연결하기 위해서 `aria-labelledby`값을 할당해주고 있어요
 
-모든 Accodion 작업을 완료했으니 정상적으로 동작하지 않을까요?
+모든 Accordion 작업을 완료했으니 정상적으로 동작하지 않을까요?
 
 이제 사용을 해볼께요
 
 ```tsx
-<Accodion type='single'>
-  <AccodionItem>
-    <AccodionButton>열기</AccodionButton>
-    <AccodionPanel>내용물</AccodionPanel>
-  </AccodionItem>
-  <AccodionItem>
-    <AccodionButton>열기2</AccodionButton>
-    <AccodionPanel>내용물</AccodionPanel>
-  </AccodionItem>
-  <AccodionItem>
-    <AccodionButton>열기3</AccodionButton>
-    <AccodionPanel>내용물</AccodionPanel>
-  </AccodionItem>
-</Accodion>
+<Accordion type='single'>
+  <AccordionItem>
+    <AccordionButton>열기</AccordionButton>
+    <AccordionPanel>내용물</AccordionPanel>
+  </AccordionItem>
+  <AccordionItem>
+    <AccordionButton>열기2</AccordionButton>
+    <AccordionPanel>내용물</AccordionPanel>
+  </AccordionItem>
+  <AccordionItem>
+    <AccordionButton>열기3</AccordionButton>
+    <AccordionPanel>내용물</AccordionPanel>
+  </AccordionItem>
+</Accordion>
 ```
 
 ![](./2.gif)
@@ -265,12 +265,12 @@ animation 사용을 위해서 keyframe를 생성해줄게요
 아코디언이 닫힐 때와 열릴 때를 만들어 주어야해요
 
 ```ts
-accodionDown: {
+accordionDown: {
   from: { height: 0 },
-  to: { height: 'var(--accodion-height)' },
+  to: { height: 'var(--accordion-height)' },
 },
-accodionUp: {
-  from: { height: 'var(--accodion-height)' },
+accordionUp: {
+  from: { height: 'var(--accordion-height)' },
   to: { height: 0 },
 },
 ```
@@ -288,18 +288,18 @@ open 여부에 따라서 css변수에 저장한 높이만큼 `height`를 변경�
 요소의 높이가 얼마인지 알 수 없기 때문에 ref를 통해서 내용물이 들어있는 요소의 크기를 구해야해요
 
 ```tsx
-const { openIndex, type } = useAccodionState();
+const { openIndex, type } = useAccordionState();
 const isOpen = type === 'single' ? openIndex === index : (openIndex as Set<number>).has(index!);
 const panelRef = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
   if (isOpen && panelRef.current) {
     panelRef!.current!.parentElement!.style.display = 'block';
-    const height = panelRef.current.style.getPropertyValue('--accodion-height');
+    const height = panelRef.current.style.getPropertyValue('--accordion-height');
 
     if (height === '0' || !height) {
       panelRef.current.parentElement!.style.setProperty(
-        '--accodion-height',
+        '--accordion-height',
         `${panelRef.current.clientHeight}px`,
       );
     }
@@ -324,7 +324,7 @@ return (
 );
 ```
 
-`display:'none'`일 때는 높이를 알 수 없기 떄문에 isOpen여부에 따라서 `display:'block'`을 해준뒤 `--accodion-height`의 값을 가져와 값이 0이거나 없을 때
+`display:'none'`일 때는 높이를 알 수 없기 떄문에 isOpen여부에 따라서 `display:'block'`을 해준뒤 `--accordion-height`의 값을 가져와 값이 0이거나 없을 때
 `panelRef`를 통해서 높이를 가져와 값을 셋팅해주고 있어요
 
 ## animation 적용하기
@@ -335,11 +335,11 @@ return (
 useEffect(() => {
   if (isOpen && panelRef.current) {
     panelRef!.current!.parentElement!.style.display = 'block';
-    const height = panelRef.current.style.getPropertyValue('--accodion-height');
+    const height = panelRef.current.style.getPropertyValue('--accordion-height');
 
     if (height === '0' || !height) {
       panelRef.current.parentElement!.style.setProperty(
-        '--accodion-height',
+        '--accordion-height',
         `${panelRef.current.clientHeight}px`,
       );
     }
@@ -359,8 +359,8 @@ return (
       overflow: 'hidden',
       transition: 'all 0.2s cubic-bezier(.4,0,.2,1)',
       animation: isOpen
-        ? 'accodionDown 0.2s cubic-bezier(.4,0,.2,1)'
-        : 'accodionUp 0.2s cubic-bezier(.4,0,.2,1)',
+        ? 'accordionDown 0.2s cubic-bezier(.4,0,.2,1)'
+        : 'accordionUp 0.2s cubic-bezier(.4,0,.2,1)',
     })}
   >
     <div
