@@ -34,11 +34,14 @@ const Categorys = ({
         alignItems='center'
         gap='10px'
       >
-        <Heading fontSize={{ sm: '36px', md: '60px' }} fontWeight={700}>
-          {currentCategory === '' ? 'ALL POSTS' : convertTitle(currentCategory)}
+        <Heading fontStyle='italic' fontSize={{ sm: '36px', md: '60px' }} fontWeight={700}>
+          {currentCategory === ''
+            ? 'ALL POSTS'
+            : CATEGORY_TANSLATE[currentCategory].toUpperCase() ?? currentCategory}
         </Heading>
         <Badge fontSize={{ sm: '14px', md: '16px' }}>{postAmount} Posts</Badge>
       </Box>
+
       <Box
         as='nav'
         width={{ sm: '100%', md: '70%' }}
@@ -91,7 +94,7 @@ const UnderLineLink = ({ link, isSelected }: { link: string; isSelected: boolean
           },
         }}
       >
-        {link === '' ? 'All' : CATEGORY_TANSLATE[link]}
+        {link === '' ? 'All' : link}
       </Text>
     </Link>
   );

@@ -34,7 +34,7 @@ const Logo = () => {
           },
         }}
       >
-        EAST-DRAGON
+        DRAKE
       </Text>
     </Link>
   );
