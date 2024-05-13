@@ -50,8 +50,8 @@ const linkList = [
     ),
   },
   {
-    link: 'mailto:think8867@gmail.com',
-    tooltip: 'think8867@gmail.com',
+    link: 'mailto:eastdraconis@gmail.com',
+    tooltip: 'eastdraconis@gmail.com',
     svg: (
       <svg
         width='100%'
