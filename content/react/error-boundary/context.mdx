@@ -1,0 +1,263 @@
+---
+slug: react-error-boundary
+title: React에서 Error를 선언적으로 관리하며 hook으로 관리하기
+description: React에서 Error을 선언적으로 핸들링할 수 있는 error-boundary기능을 사용하며 hook을 통해서 관리하는 방법에 대해서 알아봅니다.
+thumbnail: ../../../thumbnails/error-boundary.webp
+tags: ['개발', 'react']
+createdAt: '2024/06/01'
+updatedAt: ''
+---
+
+## ErrorBoundary란?
+
+컴포넌트 트리의 일부분에서 **오류**가 발생할 때 오류를 캡처하고 대체 UI를 렌더링해주는 컴포넌트 입니다.
+이를 통해서 오류로 인해서 전체 애플리케이션이 **중단되는 것을 방지하고**, 다른 부분들이 정상적으로 동작할 수 있도록 도와줍니다.
+
+자세한 설명은 공식문서에 잘 작성되어 있습니다 [공식문서 보러가기](https://legacy.reactjs.org/docs/error-boundaries.html)
+
+## 만들게 된 배경
+
+현재 프로젝트에서 `NextJS`를 사용하고 있고 `app router`를 사용하고 있기 때문에 `NextJS`에서 제공하는 `error.ts`를 통해서 에러를 핸들링할 수 있는 컴포넌트를 생성할 수 있지만.
+해당 파일을 적용하고 싶은 폴더안에 만들어야하고 부분적 적용하려면 app의 폴더에 수많은 파일들이 생겨야합니다.
+
+**부분적으로** 적용할 수 있어야 했고, 기존 `error-boundary`에서는 이벤트 핸들링 함수라던지 비동기 코드에서는 동작하지 않기 때문에
+에러의 상황을 발생시키고 리셋시키는 기능을 가진 `error-boundary`가 필요하여 만들게 되었습니다.
+
+<Callout variant='primary' title='라이브러리를 사용하고 싶은 분'>
+  이미 해당 기능들을 사용하고 싶어하는 분들이 만든 라이브러리가 존재합니다. 참고 부탁드립니다.
+  [react-error-boundary](https://www.npmjs.com/package/react-error-boundary)
+</Callout>
+
+<Callout title='왜 직접 개발하나요?'>
+  어려운 작업은 아니라고 생각이 되어서 직접 개발을 해보고 추가적인 기능들을 넣기 위해서 직접 개발을
+  진행 하였습니다!
+</Callout>
+
+## Error를 공유하기 위한 Context
+
+**Error**에 대한 상태의 공유와 reset할 수 있는 API를 공유하기 위한 **Context**를 생성합니다.
+
+공유 될 값들은 다음과 같습니다.
+
+1. 에러가 현재 캐치가 되었는지
+2. 에러가 무엇인지
+3. reset할 수 있는 메서드
+
+```tsx
+import { createContext } from 'react';
+
+export type ErrorControlProviderProps = {
+  didCatch: boolean;
+  error: any;
+  resetErrorBoundary: (...args: any[]) => void;
+};
+
+export const ErrorControlContext = createContext<ErrorControlProviderProps | null>(null);
+```
+
+## ErrorBoundary
+
+`Error Boundary`는 클래스형으로만 생성이 가능하기에 클래스형 문법을 이용해서 제작해주겠습니다.
+
+```tsx
+'use client';
+
+import { Component, ErrorInfo, ReactNode, createElement } from 'react';
+import { ErrorControlContext } from '@/lib/errorBoundary/ErrorControlContext';
+
+type ErrorBoundaryState = { didCatch: true; error: any } | { didCatch: false; error: null };
+
+type ErrorBoundaryProps = {
+  fallback: ReactNode;
+  children: React.ReactNode;
+};
+
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.resetErrorBoundary = this.resetErrorBoundary.bind(this);
+    this.state = { didCatch: false, error: null };
+  }
+
+  resetErrorBoundary() {
+    const { error } = this.state;
+    if (error !== null) {
+      this.setState({ didCatch: false, error: null });
+    }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { didCatch: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.log(error, errorInfo);
+  }
+
+  render() {
+    const { fallback, children } = this.props;
+    const { didCatch, error } = this.state;
+
+    let childToRender = children;
+
+    if (didCatch) {
+      if (fallback) {
+        childToRender = fallback;
+      }
+    }
+
+    return createElement(
+      ErrorControlContext.Provider,
+      { value: { didCatch, error, resetErrorBoundary: this.resetErrorBoundary } },
+      childToRender,
+    );
+  }
+}
+```
+
+### 생성단계
+
+우선 기본적으로 받을 인자값은 에러 발생시에 보여주어야할 UI를 받기위한 fallback를 받고 렌더링할 요소들을 받을 children이 보입니다.
+
+`constructor`를 보시면
+error의 상태값인 `this.state`에는 기본값을 지정해주고있고
+
+reset을 할 수 있는 `this.resetErrorBoundary`의 경우에는 함수에 **this**를 바인딩한것을 할당하고 있습니다.
+
+<Callout title='왜 this를 바인딩 하나요?' variant='primary'>
+  JS에서는 this가 동적이기 때문에 호출시에 this값이 변경되어 원했던 동작과는 다르게 동작할 수 있기
+  때문입니다.
+</Callout>
+
+### error catch
+
+**getDerivedStateFromError**
+
+`getDerivedStateFromError`는 자식 컴포넌트에서 에러가 발생했을 때 호출이 되며 발생한 오류를 기반으로 컴포넌트의 상태값을 업데이트 할 수 있도록 도와줍니다.
+
+오류가 발생하면 `this.state`의 값을 변경해주고 있습니다.
+
+**componentDidCatch**
+
+`componentDidCatch`도 자식 컴포넌트에서 에러가 발생했을 때 실행됩니다.
+매개 변수는 발생한 `Error`와 에러의 추가적인 정보를 포함한 `ErrorInfo`를 받습니다.
+
+<Callout title='비슷한데 왜 두개를 사용하나요?' variant='primary'>
+
+`getDerivedStateFromError`의 경우에는 렌더링 이전에 발생하므로 사이드 이펙트가 없이 동작해야하는코드만을 작성합니다<br/>
+`componentDidCatch`는 이후 사이드 이펙트를 관리하기 위해 사용됩니다.
+
+</Callout>
+
+### render
+
+오류의 상태에 따라서 fallback과 정상적인 UI를 보여주기 위한 로직입니다.
+
+먼저 렌더링 하기 위한 UI가 담긴 부분을 가져옵니다. prop으로 받아온 `fallback`과 `children`을 구조분해를 통해 가져옵니다.
+
+에러의 상태에 따라 다르게 보여줘야하기 때문에 에러의 값도 가져와줍니다.
+
+`childrenToRender` 변수를 생성해주고 default로 `children`을 할당해줍니다.
+이후 error의 상태에 따라서 **error상황이라면 fallback를 재할당해줍니다**
+
+실제로 반환되어 렌더링되는 `return` 부분을 보시면 `createElement`를 사용하고 있습니다.
+
+해당 컴포넌트에서 관리되고 실행하는 상태값들과 함수들을 공유하기 위해서 아까전에 만들었던 Context를 통해서 **공유하기 위한 작업입니다.**
+
+`createElement`에 생성할 요소, props, children를 넣어 생성해준 React요소를 반환합니다.
+
+## useErrorBoundary
+
+이제는 `ErrorBoundary`를 hook으로 관리할 수 있도록 **hook**을 생성해보겠습니다.
+
+hook을 통해서 가져가야할 기능은 다음 두 가지입니다
+
+1. **에러를 리셋한다**
+2. **에러를 발생시킨다**
+
+```tsx
+import { useContext, useMemo, useState } from 'react';
+import { ErrorControlContext } from '@/lib/errorBoundary/ErrorControlContext';
+
+type UseErrorBoundaryState<T> = { error: T; hasError: true } | { error: null; hasError: false };
+
+export function useErrorBoundary<T = any>() {
+  const context = useContext(ErrorControlContext);
+  const [errorState, setErrorState] = useState<UseErrorBoundaryState<T>>({
+    error: null,
+    hasError: false,
+  });
+
+  const memorizedCommand = useMemo(
+    () => ({
+      resetBoundary: () => {
+        context?.resetErrorBoundary();
+        setErrorState({ error: null, hasError: false });
+      },
+      showBoundary: (error: T) => {
+        setErrorState({ error, hasError: true });
+      },
+    }),
+    [context],
+  );
+
+  if (errorState.hasError) {
+    throw errorState.error;
+  }
+
+  return memorizedCommand;
+}
+```
+
+### showErrorBoundary
+
+에러 상태를 보여줄 수 있도록 하는 로직을 살펴봅시다
+
+먼저 에러의 값을 관리할 수 있도록 `useState`를 통해서 상태값을 생성해줍니다.
+
+간단하게 `showBoundary`함수는 error를 받아서, 받은 error를 `useState`값을 업데이트 해줍니다.
+
+렌더링이 되기 때문에 밑에 있는 if 조건문을 통해 업데이트한 error를 `throw`하고 있습니다.
+throw를 하게되면 만들었던 `errorBoundary`에서 캐치하여 error의 상태가 되어 `fallback`를 보여주게됩니다.
+
+### resetBoundary
+
+에러의 상태를 초기화하는 로직을 살펴봅시다
+
+**reset**를 시키기 위해서 만들어 두었던 매서드를 이용해야 하기 때문에 `useContext`를 통해 `context`값을 가져옵니다.<br/>
+가져온 `context`에 담긴 `resetErrorBoundary`를 실행하고 `useState`로 관리되고 있는 상태값을 초기값으로 업데이트 해줍니다.
+
+`resetErrorBoundary`를 통해서 `ErrorBoundary`의 상태값은 초기화가 되고 `useState`로 상태값을 초기화하여 업데이트 되므로 에러의 상태를 초기화 할 수 있습니다.
+
+## 사용
+
+```tsx
+
+function Parent() {
+
+  return(
+    <ErrorBoundary fallback={<div>에러가 발생했어요...</div>}>
+      <Child>
+    </ErrorBoundary>
+  )
+};
+```
+
+```tsx
+
+function Child() {
+  const {showBoundary,resetBoundary} = useErrorBoundary();
+
+  const handleRequest = () => {
+    try{
+      ...
+    } catch(error){
+      showBoundary(error)
+    }
+  }
+
+  return (
+      <div>child</div>
+  )
+}
+```
