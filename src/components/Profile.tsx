@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 const linkList = [
   {
-    link: 'https://github.com/Ryong-E',
+    link: 'https://github.com/eastdraconis',
     tooltip: 'Github',
     svg: (
       <svg
