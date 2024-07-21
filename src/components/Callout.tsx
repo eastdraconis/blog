@@ -47,7 +47,7 @@ const Callout = (props: CalloutProps) => {
               />
             </svg>
           </Box>
-          <Flex>
+          <Flex alignItems='center'>
             <span>
               {props.title && <span style={{ fontWeight: 'bold' }}>{props.title}</span>}
               {props.children}
@@ -100,7 +100,7 @@ const Callout = (props: CalloutProps) => {
               </g>
             </svg>
           </Box>
-          <Flex>
+          <Flex alignItems='center'>
             <span>
               {props.title && <span style={{ fontWeight: 'bold' }}>{props.title}</span>}
               {props.children}
@@ -149,7 +149,7 @@ const Callout = (props: CalloutProps) => {
               />
             </svg>
           </Box>
-          <Flex>
+          <Flex alignItems='center'>
             <Text as='span'>
               {props.title && <span style={{ fontWeight: 'bold' }}>{props.title}</span>}
               {props.children}
@@ -212,10 +212,12 @@ const Callout = (props: CalloutProps) => {
               />
             </svg> */}
           </Box>
-          <Box>
-            {props.title && <span style={{ fontWeight: 'bold' }}>{props.title}</span>}
-            {props.children}
-          </Box>
+          <Flex alignItems='center'>
+            <Text as='span'>
+              {props.title && <span style={{ fontWeight: 'bold' }}>{props.title}</span>}
+              {props.children}
+            </Text>
+          </Flex>
         </Flex>
       );
     }
