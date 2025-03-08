@@ -1,4 +1,3 @@
-import { Header } from '@/components/header';
 import { getAllMdx, getPostBySlug } from '@/domains/post/api';
 import { PostView } from '@/pages/post-view';
 import { Metadata } from 'next';
@@ -38,14 +37,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     notFound();
   }
 
-  return (
-    <>
-      <Header />
-      <main>
-        <PostView post={post} />
-      </main>
-    </>
-  );
+  return <PostView post={post} />;
 }
 
 export function generateStaticParams() {

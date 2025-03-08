@@ -2,12 +2,12 @@
 
 import { Header } from '@/components/header';
 import { PostList } from '@/domains/post/components/post-list';
-import * as styles from './style.css';
 import { ContentLayout } from '@/components/layout/content-layout';
 import { FilterTag } from '@/domains/post/components/filter-tag';
 import { Post } from '@/domains/post/types/post';
 import { Footer } from '@/components/footer';
 import { useScrollRestore } from '@/hooks/use-scroll-restore';
+import * as styles from './style.css';
 
 interface HomeProps {
   posts: Post[];

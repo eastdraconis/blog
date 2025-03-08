@@ -6,6 +6,7 @@ import { PostHead } from '@/domains/post/components/post-head';
 import { notFound } from 'next/navigation';
 import { Post } from '@/domains/post/types/post';
 import { Footer } from '@/components/footer';
+import { Header } from '@/components/header';
 
 interface PostProps {
   post: Post;
@@ -18,6 +19,7 @@ export const PostView = ({ post }: PostProps) => {
 
   return (
     <>
+      <Header />
       <main>
         <ContentLayout>
           <article>

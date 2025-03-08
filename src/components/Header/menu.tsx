@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ExternalLinkIcon } from './external-link-icon';
 import * as styles from './style.css';
+
 export const Menu = () => {
   return (
     <div>
