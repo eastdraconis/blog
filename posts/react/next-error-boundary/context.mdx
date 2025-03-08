@@ -1,0 +1,92 @@
+---
+slug: next-error-boundary
+title: nextJS error.js로 공통으로 에러를 핸들링 하며 비동기 에러도 잡는 비법
+description: 이전 글에서 만들었던 error-boundary를 이용하여 nextJS error.js를 공통으로 사용하는 방법입니다.
+image: '/thumbnails/error-boundary.webp'
+tags: ['개발', 'react']
+date: '2024/08/07'
+---
+
+## error.js란
+
+`error.js`는 NextJS에서 파일 규칙을 통해 제공되는 해당 경로에 대한 오류 UI 경계를 생성할 수 있도록 도와주는 파일입니다.
+
+[React-Error-Boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)를 파일 기반으로 생성해주고 해당 경로에 자동으로 래핑을 해주는 기능입니다.
+
+## 만들게 된 배경
+
+`error.js`를 사용하며 해결가능한 문제와 해결이 어려운 문제가 있었습니다.
+
+<Callout variant='primary' title='error.js 중복'>
+  같은 에러 핸들링의 경우에는 **group route**를 이용하여 공통적인 `error.js`를 적용은 가능합니다.
+</Callout>
+
+````shell app/ ├─ (main)/ │ ├─ layout.js │ ├─ error.js // 메인 섹션의 공통 에러 처리 │ ├─ page.js │
+├─ about/ │ │ └─ page.js │ └─ contact/ │ └─ page.js ├─ (admin)/ │ ├─ layout.js │ ├─ error.js //
+관리자 섹션의 공통 에러 처리 │ ├─ dashboard/ │ │ └─ page.js │ └─ users/ │ └─ page.js └─ ... ```
+
+<Callout variant='warn' title='비동기'>
+
+이전 글 처럼 `error-boundary`는 비동기 동작에서 발생한 오류의 경우에는 잡지를 못합니다. `error.js`도 그냥 `error-boundary`이기 때문에 잡지 못합니다.<br/> 하지만 `page.js`가 서버컴포넌트의 경우에는 잡을 수 있습니다
+
+</Callout>
+
+<Callout variant='warn' title='일관성'>
+
+fallbackUI를 만들어 `error-boundary`를 직접 적용하는 부분과 `error.js`를 적용하는 부분으로 관리가 되는 부분이 나뉘어지게 됩니다.
+
+</Callout>
+
+<Callout variant='warn' title='중앙화'>
+
+fallbackUI를 만들어두고 에러가 발생하는 곳에 `error-boundary`를 적용하면 되지만, nextjs에서 제공하는 `file route`를 적극적 으로 사용하고 싶고 해당 경로에서 **에러,로딩,레이아웃**등 경로에 필요한 요소들을 한 곳에서 볼 수 있다라는 장점이 있어
+`error.js`를 사용하고 싶었습니다.
+
+</Callout>
+
+이전글에서 비동기 문제로인해 `custom-error-boundary`를 만들었으니 이것을 이용해서 `error.js`를 실행시키면 되지않을까 라는 생각에 만들게 되었습니다.
+
+## propagation 옵션 추가
+
+> [이전 글 보러가기](https://www.handongryong.com/post/react-error-boundary/)<br/>
+> 이전글을 기반으로 조금 추가된 부분만 코드를 작성했기에 보고오시면 더 이해가 빠를 것입니다.
+
+단순하게 해당 옵션을 받은 `error-boundary`라면 error가 잡혔을 때 다시 상위로 에러를 전파시키는 기능입니다.
+
+```tsx
+propagationError(error: Error) {
+    const { propagation = false } = this.props;
+    if (propagation) {
+      throw error;
+    }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { didCatch: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.propagationError(error);
+    console.log(error, errorInfo);
+  }
+````
+
+`propagationError`는 error-boundary에서 error가 발생했을 때 다시 상위로 에러를 전파시키는 기능입니다.
+propagation 옵션값이 true일 경우에는 에러를 전파시키고 false일 경우에는 에러를 잡아서 UI를 렌더링해줍니다.
+
+에러가 잡히었을 때 전파를 해주는 부분이 필요합니다
+`getDerivedStateFromError`에서 에러가 발생했을 때 상태값을 변경해주고 `componentDidCatch`에서 에러가 발생했을 때 전파를 해주는 부분입니다.
+
+## 적용 방법
+
+`error.js`로 핸들링을 하고 싶은 `page.js`에 `error-boundary`를 적용하고 `propagation`옵션을 true로 주면 됩니다.
+
+```tsx
+// /app/(main)/dashboard/page.js
+
+<ErrorBoundary propagation>
+  <Componnt />
+</ErrorBoundary>
+```
+
+> 결국 `ErrorBoundary`를 적용을 해주기는 해야하지만. `error.js`로만 에러에 대해서 핸들링이 가능해져 한 곳에서 확인할 수 있게 되었습니다. 또한 비동기 동작에서 hook을 통해 `error-boundary`를 실행하여 `error.js`를 실행시킬 수 있게 되었습니다.
