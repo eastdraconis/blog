@@ -29,5 +29,5 @@ export const tag = style({
 });
 
 export const closeIcon = style({
-  width: '16px',
+  width: '12px',
 });
