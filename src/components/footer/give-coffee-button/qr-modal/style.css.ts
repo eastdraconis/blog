@@ -40,6 +40,7 @@ export const qrInnerContainer = style({
 export const qrImageContainer = style({
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   gap: '8px',
 });
 
@@ -56,5 +57,5 @@ export const ci = style({
 export const qrContainer = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
+  gap: '16px',
 });
