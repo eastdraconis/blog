@@ -43,10 +43,10 @@ export const components: MDXComponents = {
     </a>
   ),
   img: ({ alt, ...rest }) => (
-    <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
+    <figure style={{ marginTop: '2rem', marginBottom: '2rem' }}>
       <Image {...rest} className={styles.image} width={900} height={500} alt={''} quality={100} />
       <figcaption>{alt}</figcaption>
-    </div>
+    </figure>
   ),
   hr: () => (
     <section className={styles.hrWrapper}>

@@ -49,6 +49,4 @@ function copyImagesFromDir(dir, baseDir = postsDir) {
 }
 
 // 실행
-console.log('Copying images from posts directory to public/images/posts...');
 copyImagesFromDir(postsDir);
-console.log('Done!');

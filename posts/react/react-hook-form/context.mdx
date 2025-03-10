@@ -548,11 +548,15 @@ useState로 관리하고 있고 변동이 생길 시 해당 `setState`로 최신
 **`react-hook-form`은 어떻게 적용했는지 살펴볼까요?**
 
 ![react-hook-form (createFormControl.ts)](/react/react-hook-form/1.png)
+
 `react-hook-form`에서는 `_subjects`객체에 개별로 `createSubject`함수를 호출하여 observer패턴으로 만들어 줍니다.
 
 ![react-hook-form (useform.tsx)](/react/react-hook-form/2.png)
+
 `useSubscribe`는 구독을 원하는 subject에 next함수를 추가해주는 함수입니다.
+
 ![react-hook-form (createFormControl.tsx)](/react/react-hook-form/3.png)
+
 위에서 만든 subject에 구독을 추가합니다. `shouldRenderFormState`에서는 바로 `_updateFormState`로 `_formState`를 업데이트하고 반환되는 값에 따라서 `useState`로 관리되고 있는 `formState`를 `setState`로 업데이트를 해주고 있습니다.
 
 `setError`는 하나의 에러만 등록이 가능하도록 하였습니다.

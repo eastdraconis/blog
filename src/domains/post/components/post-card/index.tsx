@@ -11,8 +11,9 @@ export const PostCard = ({ slug, tags, title, date, image }: Post) => {
   const targetRef = useRef<HTMLAnchorElement | null>(null);
 
   const calcGridRowEnd = () => {
+    if (window.visualViewport?.width && window.visualViewport.width < 700) return;
     if (!targetRef.current) return;
-
+    console.log('calc');
     const child = targetRef.current.children[0];
     if (!child) return;
 
@@ -30,7 +31,13 @@ export const PostCard = ({ slug, tags, title, date, image }: Post) => {
         {image && (
           <div className={styles.postCardImage}>
             <div className={styles.imageWrapper}>
-              <Image src={image} alt={title} className={styles.image} fill />
+              <Image
+                src={image}
+                alt={title}
+                className={styles.image}
+                fill
+                sizes='(max-width: 700px) 100vw, 33vw'
+              />
             </div>
           </div>
         )}

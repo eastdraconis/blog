@@ -47,7 +47,7 @@ export const title4 = style({
 });
 
 export const paragraph = style({
-  fontSize: '20px',
+  fontSize: '18px',
   textWrap: 'wrap',
   marginBottom: '1rem',
   wordBreak: 'keep-all',
@@ -61,13 +61,13 @@ export const paragraph = style({
   },
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '18px',
+      fontSize: '17px',
     },
   },
 });
 
 export const link = style({
-  fontSize: '20px',
+  fontSize: '18px',
   fontWeight: 700,
   lineHeight: 1.15,
   textDecoration: 'underline',
@@ -77,7 +77,7 @@ export const link = style({
   },
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '18px',
+      fontSize: '17px',
     },
   },
 });
@@ -125,7 +125,7 @@ export const strong = style({
 
 export const ol = style({
   maxWidth: '640px',
-  fontSize: '20px',
+  fontSize: '18px',
   marginTop: '15px',
   marginBottom: '15px',
   marginInline: 'auto',
@@ -136,14 +136,14 @@ export const ol = style({
   },
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '18px',
+      fontSize: '17px',
     },
   },
 });
 
 export const ul = style({
   maxWidth: '640px',
-  fontSize: '20px',
+  fontSize: '18px',
   marginTop: '15px',
   marginBottom: '15px',
   marginInline: 'auto',
@@ -151,7 +151,7 @@ export const ul = style({
   listStylePosition: 'inside',
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '18px',
+      fontSize: '17px',
     },
   },
 });
@@ -182,9 +182,6 @@ export const image = style({
   objectFit: 'cover',
   maxWidth: '900px',
   marginInline: 'auto',
-  // position: 'absolute',
-  // top: 0,
-  // left: 0,
   ':hover': {
     transform: 'scale(1)',
     transition: 'transform 0.3s ease-out',
@@ -195,13 +192,13 @@ export const code = style({
   padding: '1px 4px',
   borderRadius: '4px',
   backgroundColor: 'rgba(135, 131, 120, .15)',
-  fontSize: '1rem',
+  fontSize: '14px',
   textWrap: 'nowrap',
   color: '#a95937',
   fontWeight: 500,
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '0.75rem',
+      fontSize: '12px',
     },
   },
 });

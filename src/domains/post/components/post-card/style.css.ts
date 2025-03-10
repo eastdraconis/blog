@@ -6,6 +6,11 @@ export const container = style({
   borderRadius: '24px',
   display: 'block',
   overflow: 'hidden',
+  '@media': {
+    '(max-width: 700px)': {
+      gridColumnEnd: 'auto',
+    },
+  },
   gridColumnEnd: 'span 6',
 });
 
@@ -68,7 +73,7 @@ export const tagContainer = style({
 });
 
 export const tag = style({
-  padding: '2px 4px',
+  padding: '4px 8px',
   fontSize: '12px',
   borderRadius: '8px',
   background: '#f2f3f6',

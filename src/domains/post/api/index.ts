@@ -36,12 +36,6 @@ export const getPostBySlug = (slug: string) => {
   return foundPost;
 };
 
-export const getRecentPosts = () => {
-  const allPosts = getAllMdx();
-  const recentPosts = allPosts.sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
-  return recentPosts.slice(0, 3);
-};
-
 const filterPosts = (posts: Post[], tags: string | string[]) => {
   if (!tags || tags.length === 0) {
     return posts;
