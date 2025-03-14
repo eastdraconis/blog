@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/global.css';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
 const pretendard = localFont({
   src: '../styles/font/PretendardVariable.woff2',
@@ -43,10 +44,12 @@ export default function Layout({
 }>) {
   return (
     <html lang='ko' className={pretendard.variable}>
+      <GoogleTagManager gtmId='GTM-PGSGTKHF' />
       <body>
         {children}
         <div id='modal' />
       </body>
+      <GoogleAnalytics gaId='G-Q8DZS4C2DL' />
     </html>
   );
 }
