@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import * as styles from './style.css';
 import Image from 'next/image';
 
@@ -55,9 +54,6 @@ const linkList = [
     ),
   },
 ];
-const IconBox = ({ children }: { children: ReactNode }) => {
-  return <div className={styles.iconWrapper}>{children}</div>;
-};
 
 export const Profile = () => {
   return (
@@ -74,7 +70,7 @@ export const Profile = () => {
       <div className={styles.iconContainer}>
         {linkList.map((link, index) => (
           <a key={index} href={link.link} target='_blank'>
-            <IconBox>{link.svg}</IconBox>
+            <div className={styles.iconWrapper}>{link.svg}</div>
           </a>
         ))}
       </div>

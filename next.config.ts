@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  cleanDistDir: true,
 };
 
 export default withVanillaExtract(nextConfig);

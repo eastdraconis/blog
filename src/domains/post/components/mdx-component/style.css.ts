@@ -238,6 +238,11 @@ globalStyle('figure >pre', {
   },
 });
 
+globalStyle('figure > figcaption', {
+  marginTop: '16px',
+  color: vars.color.gray,
+});
+
 globalStyle('pre:not(:has(+ figcaption))', {
   marginBottom: '2rem',
 });

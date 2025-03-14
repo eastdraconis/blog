@@ -149,7 +149,7 @@ export default OverlayController;
 
 </Callout>
 
-React의 useImperativeHandle을 통해서 ref로 접근시에 close라는 매서드를 사용할 수 있도록 열어두어 외부에서 controller 컴포넌트의 open상태값을 변경할 수 있도록 하였습니다.
+React의 `useImperativeHandle`을 통해서 ref로 접근시에 close라는 매서드를 사용할 수 있도록 열어두어 외부에서 controller 컴포넌트의 open상태값을 변경할 수 있도록 하였습니다.
 그리고 전달 받았던 `overlayElement`에 현재 열려있는지에 대한 상태값,종료함수,삭제함수를 전달합니다<br/>
 `isOpen` `close` `onExit` 값들을 먼저 받아 커스텀 후에 넘겨줄 수도 있습니다<br/>
 
