@@ -19,7 +19,15 @@ export const GiveCoffeeButton = () => {
 
   return (
     <>
-      <button onClick={openModal} className={styles.buttonWrapper}>
+      <button
+        type='button'
+        aria-label='give coffee'
+        aria-haspopup='dialog'
+        aria-expanded={isOpen ? 'true' : 'false'}
+        name='give-coffee'
+        onClick={openModal}
+        className={styles.buttonWrapper}
+      >
         <CoffeeIcon />
       </button>
       {isOpen &&
