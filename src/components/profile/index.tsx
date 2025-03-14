@@ -18,7 +18,7 @@ const linkList = [
     ),
   },
   {
-    link: 'https://www.linkedin.com/in/%EB%8F%99%EB%A3%A1-%ED%95%9C-9567a9228/',
+    link: 'https://www.linkedin.com/in/handongryong',
     tooltip: 'LinkedIn',
     svg: (
       <svg
