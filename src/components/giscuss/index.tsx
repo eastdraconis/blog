@@ -7,7 +7,7 @@ export const Giscus = () => {
   const setGiscus = useCallback(() => {
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
-    script.setAttribute('data-repo', 'eastdraconis/Handongryong.com');
+    script.setAttribute('data-repo', 'eastdraconis/blog');
     script.setAttribute('data-repo-id', 'R_kgDOLoxk5A');
     script.setAttribute('data-category', 'Announcements');
     script.setAttribute('data-category-id', 'DIC_kwDOLoxk5M4Ce-7Q');
