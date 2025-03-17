@@ -11,6 +11,7 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://handongryong.com'),
   title: {
     template: '%s | 한동룡 기술 블로그',
     default: '한동룡 기술 블로그',

@@ -37,10 +37,8 @@ export const PostCard = ({ slug, tags, title, image }: Post) => {
                 className={styles.image}
                 fill
                 quality={100}
-                sizes='(max-width: 700px) 100vw, 33vw'
+                sizes='300px'
                 loading='lazy'
-                placeholder='blur'
-                blurDataURL='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmMWYxZjEiLz48L3N2Zz4='
               />
             </div>
           </div>
