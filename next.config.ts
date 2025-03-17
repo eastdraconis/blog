@@ -5,6 +5,7 @@ const withVanillaExtract = createVanillaExtractPlugin({});
 
 const nextConfig: NextConfig = {
   transpilePackages: ['next-mdx-remote'],
+
   images: {
     minimumCacheTTL: 86400,
     remotePatterns: [
@@ -14,6 +15,15 @@ const nextConfig: NextConfig = {
     ],
   },
   cleanDistDir: true,
+  async redirects() {
+    return [
+      {
+        source: '/post/:slug',
+        destination: '/posts/:slug',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withVanillaExtract(nextConfig);
