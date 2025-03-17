@@ -59,6 +59,7 @@ export const note = style({
   maxWidth: '640px',
   marginInline: 'auto',
 });
+
 export const center = style({
   display: 'flex',
   alignItems: 'center',

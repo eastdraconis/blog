@@ -10,12 +10,11 @@ interface TagProps {
 export const Tag = ({ tag }: TagProps) => {
   const { toggleTag, isTagSelected } = useTagToggle();
 
-  const handleToggle = () => {
-    toggleTag(tag);
-  };
-
   return (
-    <div className={styles.container({ selected: isTagSelected(tag) })} onClick={handleToggle}>
+    <div
+      className={styles.container({ selected: isTagSelected(tag) })}
+      onClick={() => toggleTag(tag)}
+    >
       <span className={styles.tag}>{tag}</span>
       {isTagSelected(tag) && <CloseIcon />}
     </div>

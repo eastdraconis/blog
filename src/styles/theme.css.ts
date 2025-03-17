@@ -2,7 +2,7 @@ import { createGlobalTheme } from '@vanilla-extract/css';
 
 export const vars = createGlobalTheme(':root', {
   color: {
-    background: '#faf9f5',
+    background: '#faf7f6',
     text: '#141413',
     gray: '#6a6c6e',
     caution: '#EFBC9B',
@@ -11,3 +11,4 @@ export const vars = createGlobalTheme(':root', {
     success: '#bcd1cb',
   },
 });
+// #faf7f6

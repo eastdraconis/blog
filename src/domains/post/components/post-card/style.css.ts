@@ -17,6 +17,11 @@ export const container = style({
 export const postCardImage = style({
   aspectRatio: '4/3',
   position: 'relative',
+  '@media': {
+    '(max-width: 700px)': {
+      aspectRatio: '16/9',
+    },
+  },
 });
 export const imageWrapper = style({
   height: '100%',
@@ -39,7 +44,7 @@ export const image = style({
   transition: 'all 0.3s ease-in-out',
   selectors: {
     [`${container}:hover &`]: {
-      transform: 'scale(1.2)',
+      transform: 'scale(1.1)',
     },
   },
 });
@@ -58,8 +63,6 @@ export const dateWrapper = style({
 
 export const date = style({
   fontSize: '12px',
-
-  // color: '#ffffff',
 });
 
 export const title = style({
@@ -82,6 +85,6 @@ export const tag = style({
 export const contentContainer = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
+  gap: '16px',
   padding: '32px',
 });

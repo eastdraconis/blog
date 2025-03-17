@@ -7,13 +7,13 @@ import { Post } from '../../types/post';
 import { useRef } from 'react';
 import { useResizeObserver } from '@/hooks/use-resize-observer';
 
-export const PostCard = ({ slug, tags, title, date, image }: Post) => {
+export const PostCard = ({ slug, tags, title, image }: Post) => {
   const targetRef = useRef<HTMLAnchorElement | null>(null);
 
   const calcGridRowEnd = () => {
     if (window.visualViewport?.width && window.visualViewport.width < 700) return;
     if (!targetRef.current) return;
-    console.log('calc');
+
     const child = targetRef.current.children[0];
     if (!child) return;
 
@@ -36,12 +36,17 @@ export const PostCard = ({ slug, tags, title, date, image }: Post) => {
                 alt={title}
                 className={styles.image}
                 fill
+                quality={100}
                 sizes='(max-width: 700px) 100vw, 33vw'
+                loading='lazy'
+                placeholder='blur'
+                blurDataURL='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmMWYxZjEiLz48L3N2Zz4='
               />
             </div>
           </div>
         )}
         <div className={styles.contentContainer}>
+          <h2 className={styles.title}>{title}</h2>
           <div className={styles.tagContainer}>
             {tags.map((tag) => (
               <span className={styles.tag} key={tag}>
@@ -49,10 +54,7 @@ export const PostCard = ({ slug, tags, title, date, image }: Post) => {
               </span>
             ))}
           </div>
-          <h2 className={styles.title}>{title}</h2>
-          <span className={styles.date}>{date}</span>
         </div>
-        {/* <div className={styles.dateWrapper}></div> */}
       </div>
     </Link>
   );

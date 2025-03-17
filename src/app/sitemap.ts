@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/domains/post/api';
+import { Post } from '@/domains/post/types/post';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://handongryong.com';
@@ -8,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts([]);
 
   // 포스트 URL 생성
-  const postUrls = posts.map((post) => ({
+  const postUrls = posts.map((post: Post) => ({
     url: `${baseUrl}/posts/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'weekly' as const,
@@ -22,12 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/posts`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
     },
   ];
 

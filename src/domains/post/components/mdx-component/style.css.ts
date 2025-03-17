@@ -15,9 +15,9 @@ export const title1 = style({
 
 export const title2 = style({
   fontSize: '1.75rem',
-  marginTop: '4rem',
+  marginTop: '3rem',
   textWrap: 'wrap',
-  marginBottom: '2rem',
+  marginBottom: '1rem',
   marginInline: 'auto',
   fontWeight: 'bold',
   lineHeight: 1.55,
@@ -26,8 +26,8 @@ export const title2 = style({
 
 export const title3 = style({
   fontSize: '1.5rem',
-  marginTop: '4rem',
-  marginBottom: '2rem',
+  marginTop: '2rem',
+  marginBottom: '1rem',
   textWrap: 'wrap',
   marginInline: 'auto',
   fontWeight: 'bold',
@@ -37,9 +37,9 @@ export const title3 = style({
 
 export const title4 = style({
   fontSize: '1.25rem',
-  marginTop: '4rem',
+  marginTop: '2rem',
   textWrap: 'wrap',
-  marginBottom: '2rem',
+  marginBottom: '1rem',
   marginInline: 'auto',
   fontWeight: 'bold',
   lineHeight: 1.55,
@@ -52,13 +52,8 @@ export const paragraph = style({
   marginBottom: '1rem',
   wordBreak: 'keep-all',
   marginInline: 'auto',
-  lineHeight: 1.15,
+  lineHeight: 1.55,
   maxWidth: '640px',
-  selectors: {
-    '& + &': {
-      marginTop: '1rem',
-    },
-  },
   '@media': {
     '(max-width: 768px)': {
       fontSize: '17px',
@@ -69,7 +64,7 @@ export const paragraph = style({
 export const link = style({
   fontSize: '18px',
   fontWeight: 700,
-  lineHeight: 1.15,
+  lineHeight: 1.55,
   textDecoration: 'underline',
   position: 'relative',
   ':hover': {
@@ -113,8 +108,8 @@ export const hrWrapper = style({
 });
 
 export const hr = style({
-  marginTop: '20px',
-  marginBottom: '20px',
+  marginTop: '1.5rem',
+  marginBottom: '1.5rem',
   borderTop: '1px solid ',
   borderColor: vars.color.text,
 });
@@ -182,6 +177,7 @@ export const image = style({
   objectFit: 'cover',
   maxWidth: '900px',
   marginInline: 'auto',
+  borderRadius: '12px',
   ':hover': {
     transform: 'scale(1)',
     transition: 'transform 0.3s ease-out',
@@ -194,6 +190,7 @@ export const code = style({
   backgroundColor: 'rgba(135, 131, 120, .15)',
   fontSize: '14px',
   textWrap: 'nowrap',
+  lineHeight: 1.55,
   color: '#a95937',
   fontWeight: 500,
   '@media': {
@@ -240,7 +237,9 @@ globalStyle('figure >pre', {
 
 globalStyle('figure > figcaption', {
   marginTop: '16px',
-  color: vars.color.gray,
+  color: '#868b94',
+  fontSize: '12px',
+  textAlign: 'center',
 });
 
 globalStyle('pre:not(:has(+ figcaption))', {

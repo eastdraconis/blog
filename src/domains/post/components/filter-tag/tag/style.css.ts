@@ -18,6 +18,9 @@ export const container = recipe({
       },
       false: {
         backgroundColor: vars.color.info,
+        ':hover': {
+          backgroundColor: '#d7d6d2',
+        },
       },
     },
   },

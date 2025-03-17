@@ -26,15 +26,17 @@ export const PostView = ({ post }: PostProps) => {
         <ContentLayout>
           <article>
             <PostHead {...post} />
-            <Image
-              src={post.image}
-              alt={post.title}
-              width={1000}
-              height={500}
-              quality={100}
-              priority
-              className={styles.thumbnail}
-            />
+            {post.image && (
+              <Image
+                src={post.image}
+                alt={post.title}
+                width={1000}
+                height={500}
+                quality={100}
+                priority
+                className={styles.thumbnail}
+              />
+            )}
             <MDXComponent source={post.content} />
           </article>
           <Profile />

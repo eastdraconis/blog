@@ -1,9 +1,8 @@
-import { vars } from '@/styles/theme.css';
 import { style } from '@vanilla-extract/css';
 
 export const container = style({
+  backgroundColor: '#1C1C22',
   padding: '60px 0',
-  backgroundColor: vars.color.info,
   display: 'flex',
   flexDirection: 'column',
   gap: '16px',
@@ -17,7 +16,7 @@ export const copyrightWrapper = style({
 
 export const copyrightText = style({
   fontSize: '14px',
-  color: '#666',
+  color: '#ffffff',
 });
 
 export const footerActions = style({

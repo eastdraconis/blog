@@ -3,10 +3,11 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { Post } from '../types/post';
 import { calculateReadingTime } from '../libs/calculate-reading-time';
+import { cache } from 'react';
 
 const postsDirectory = join(process.cwd(), 'posts');
 
-export const getAllMdx = (dir: string = postsDirectory): Post[] => {
+export const getAllMdx = cache((dir: string = postsDirectory): Post[] => {
   let posts: Post[] = [];
   const files = fs.readdirSync(dir);
 
@@ -25,13 +26,13 @@ export const getAllMdx = (dir: string = postsDirectory): Post[] => {
   });
 
   return posts;
-};
+});
 
 export const getPostBySlug = (slug: string) => {
   const allPosts = getAllMdx();
 
-  const foundPost = allPosts.find((file) => {
-    return file.slug === slug;
+  const foundPost = allPosts.find((post) => {
+    return post.slug === slug;
   });
 
   return foundPost;
@@ -52,15 +53,15 @@ const filterPosts = (posts: Post[], tags: string | string[]) => {
   return filterdPosts;
 };
 
-export const getAllPosts = (tags: string | string[]) => {
+export const getAllPosts = cache((tags: string | string[]) => {
   const allPosts = getAllMdx();
   const filteredPosts = filterPosts(allPosts, tags);
 
   const posts = filteredPosts.sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
   return posts;
-};
+});
 
-export const getAllTags = () => {
+export const getAllTags = cache(() => {
   const tags = new Set<string>();
   const allPosts = getAllMdx();
   allPosts.forEach((post) => {
@@ -68,6 +69,6 @@ export const getAllTags = () => {
       tags.add(tag);
     });
   });
-
-  return Array.from(tags);
-};
+  const sortedTags = Array.from(tags).sort((a, b) => b.localeCompare(a));
+  return sortedTags;
+});
