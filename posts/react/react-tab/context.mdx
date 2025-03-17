@@ -1,0 +1,425 @@
+---
+slug: react-tab
+title: React에서 UI 라이브러리를 사용하지 않고 Tab기능 만들기
+description: React에서 UI 라이브러리를 사용하지 않고 직접 탭을 만들어 본 경험을 작성했습니다
+image: '/thumbnails/tab.png'
+tags: ['개발', 'react', '디자인 시스템']
+date: '2023-11-18'
+---
+
+<Callout variant='warn' title='시작하기 앞서'>
+  styled-components를 사용하여 제작하였습니다
+</Callout>
+## Tab이란?
+
+![](/react/react-tab/1.png)
+
+이렇게 생긴 탭을 많이 보았을겁니다.
+
+상단의 탭을 변경하면 아래에 있는 내용이 상단의 탭의 내용으로 변경이 됩니다.
+
+저는 Chakra UI 라이브러리를 많이 사용하여 여기서 제공하는 Tabs를 사용하곤 했습니다.
+이번에 회사에서 개발을 하면서 UI 라이브러리를 사용하지않고 직접 하는게 좋다고 해서 직접 제작을 해보았습니다.
+
+## 필요한 값들
+
+개발을 시작하기 전에 무엇이 필요한지 먼저 정의해 보았습니다.
+먼저 생각해 둔다면 어떤 식으로 개발을 진행하고 구조또한 생각하고 개발을 할 때엔 개발에만 집중하면 되어 효율성을 높일 수 있습니다
+
+저는 추가적인 기능을 위해서 다음과 같이 생각해보았습니다.
+
+1. tab에서는 어디서든 현재 어느 탭인지 알 수 있어야한다
+2. 탭의 인디케이터 에서는 현재 탭 이전의 값들의 길이값을 알아야한다
+3. tab에 관련해서 추가적인 옵션에 대해서 어디서든 알 수 있어야한다
+
+## 정보 공유
+
+탭에서는 현재 무슨 탭인지 알 수 있어야합니다.<br/>
+그래서 context api를 사용해서 필요한 정보들을 공유 해주었습니다
+
+<Callout title='추가 옵션' variant='primary'>
+  우선 저의 경우에는 Tabs를 두가지 버전으로 사용해야하고
+  <br /> Tab을 꽉차게 적용할지에 대한 값인 variant, isFitted라는 값을 추가로 넣었습니다
+</Callout>
+
+> 글을 작성하면서 들었던 생각은 탭의 옵션에 대해서 가고 있는 Provider를 하나 더 가지거나 useReducer에서 가지는 value를 객체로 만들어 현재 선택된 stage와 option으로 나누어 관리해도 좋아보입니다
+
+context를 두개를 만들어 한개는 Tab의 현재 상태에 관한 정보를 공유하고 나머지는 tab의 상태를 변경하는 dispatch를 공유하는 컨텍스트를 생성했습니다.
+
+이전에 글을 통해서 context api와 useReducer를 통해 상태관리를 하는 방법에 대해 나와있으니 참고하시길 바랍니다.
+
+탭의 상태를 알려주는 context의 value에는 `{선택된 탭 id,variant,isFitted}` 이렇게 할당해주었습니다.
+
+[상태관리 만들기 보러가기](https://handongryong.com/post/react-contextapi-usereducer/)
+
+## Tabs
+
+Tabs는 Tab기능을 사용하기 위한 가장 최상단의 컴포넌트 Wrap입니다
+아까 전에 생성했던 provider로 children을 감싸는 간단한 컴포넌트입니다.
+Provider컴포넌트에 이전에 제가 받았던 설정한 옵션을 props로 넘겨주어 provider에서 값을 공유해주도록합니다.
+
+```ts
+import TabsProvider, { TabsVariant } from './TabsProvider';
+import styled from 'styled-components';
+
+const Tabs = ({
+  children,
+  variant = 'primary',
+  isFitted = false,
+}: {
+  children: React.ReactNode;
+  variant?: TabsVariant;
+  isFitted?: boolean;
+}) => {
+  return (
+    <TabsProvider variant={variant} isFitted={isFitted}>
+      <TabContainer>{children}</TabContainer>
+    </TabsProvider>
+  );
+};
+
+export default Tabs;
+```
+
+## TabList
+
+각 탭의 **제목**을 받을 컴포넌트입니다.
+
+여기서는 선택된 탭의 정보를 알아야하고 선택이 된다면 현재 선택된 값을 변경해주기 위해
+상단에 감싸주었던 `useStageState`를 통해 선택된 탭의 값을 가져옵니다
+
+TabList에 children으로 탭의 내용을 받도록 합니다
+
+`TabList`의 사용 예시입니다
+
+```js
+<Tabs>
+  <TabList>
+    <div>탭 1번</div>
+    <div>탭 2번</div>
+    <div>탭 3번</div>
+  </TabList>
+</Tabs>
+```
+
+TabList에서는 children의 값에 대해 알 수 있습니다.
+React에서 제공하는 Children을 통해서 자식들의 정보를 가져옵니다,
+
+Children은 다수의 값이 들어오기 때문에
+Children.toArray(children)을 통해서 children값으로 들어온 값을 배열로 바꾸고
+map함수를 통해서 원하는 Tab의 스타일로 변경하여 탭을 제작해줍니다.
+
+```js
+const TabList = ({ children }: { children: React.ReactNode }) => {
+  const dispatch = useStageDispatch();
+  const stage = useStageState();
+  const tabsRef = useRef<any>();
+  return (
+    <TabBox>
+      {Children.toArray(children).map((tab, index) => {
+        return (
+          <Tab
+            $isFitted={stage.isFitted}
+            $active={stage.variant === 'rounded' ? stage.stage === index : null}
+            key={index}
+            ref={stage.stage === index ? tabsRef : null}
+            onClick={() => dispatch({ type: 'MOVE_INDEX', payload: index })}
+            style={{ ...variant[stage.variant] }}
+          >
+            <Text
+              fontStyle={stage.variant === 'primary' ? 'label100' : 'label200'}
+              fontWeight={stage.variant === 'primary' ? 'bold' : 'medium'}
+            >
+              {React.isValidElement(tab) && tab.props.children}
+            </Text>
+          </Tab>
+        );
+      })}
+      {stage.variant === 'primary' && <TabIndicator index={stage.stage} target={tabsRef} />}
+    </TabBox>
+  );
+};
+```
+
+<Callout variant='warn'>
+  저는 TabList생성시 안에 들어가는 텍스트만 필요하기에 Children.props.children값을 사용했습니다
+</Callout>
+
+현재 선택된 탭의 숫자와 map을 돌면서 index번호와 같다면 선택된 값이므로 해당 상황일 때에 대한 스타일을 지정해주시면 됩니다.
+그리고 클릭시에는 provider의 dispatch를 통해 선택한 탭의 숫자를 변경해주는 로직을 추가해줍니다
+
+<Callout variant='caution'>
+  Tab 컴포넌트를 분리하여 TabList안에 바로 선언할 수 있는 구조가 좋을 것같습니다.
+  <br /> indicator때문에 현재 구현을 이렇게 했습니다, 추후에 수정하도록 하겠습니다.
+</Callout>
+
+### Indicator
+
+기본 설정으로 Tab을 만든다면 tab밑에 indicator가 선택된 탭을 이동해야했습니다.
+`TabList`에서 적용한 `ref`를 Indicator에 넘겨주고 `useStageState`를 통해 선택된 탭이 몇번째인지 알 수 있고 `ref`를 통해서 선택된 탭 이전의 Tab의 길이값을 더해 `left`값을 구해 indicator에 적용하여 움직일 수 있도록 하였습니다
+
+```js
+const getLeftWidth = useCallback(() => {
+    let width = 0;
+    target.current?.parentNode?.childNodes.forEach((element, elIndex) => {
+      if (elIndex < index) {
+        width += (element as HTMLDivElement).offsetWidth + 8;
+      }
+    });
+    return width;
+  }, [index, target])
+
+```
+
+> 추후에는 Indicator또한 분리해내서 필요할 때 `Tabs` 내부에 선언만해도 동작할 수 있도록 변경할 예정입니다 (특정 테마에서만 동작!)
+
+## TabPanel
+
+가장 간단한 부분인것같습니다
+현재 선택된 tab의 번호를 가져와 동일한 번호를 가진 퍼널만 보여주면 됩니다
+
+```js
+const TabPanel = ({ children, ...props }: TabPanelProps) => {
+  const stage = useStageState();
+  return (
+    <Panels {...props}>
+      {Children.toArray(children).map((pannel, index) => {
+        if (stage.stage !== index) return null;
+        return <React.Fragment key={index}>{pannel}</React.Fragment>;
+      })}
+    </Panels>
+  );
+};
+```
+
+## 최종 사용법
+
+```js
+<Tabs>
+  <TabList>
+    <div>1번 탭</div>
+    <div>2번 탭</div>
+    <div>3번 탭</div>
+  </TabList>
+  <TabPanel>
+    <div>첫번째 탭 내용입니다</div>
+    <div>두번째 탭 내용입니다</div>
+    <div>세번째 탭 내용입니다</div>
+  </TabPanel>
+</Tabs>
+```
+
+![line Tab](/react/react-tab/2.png)
+
+![round Tab](/react/react-tab/3.png)
+
+## 마무리
+
+Tab이라는 컴포넌트를 이렇게 만들어본적은 처음이네요
+아직 리펙토링 과정도 진행되지않았고 우선 돌아가만 만들다보니 부족한 부분이 많이 보이는 것 같아요
+
+항상 만들어져있던 Tab컴포넌트만 사용했었는데 직접만들어보니 `Children`이라던지 `cloneElement`등을 알게되고
+다른 컴포넌트 또한 쉽게 만들 수 있을 것 같고 라이브러리의 편의성을 다시 한 번 느끼게된 경험이였습니다.
+
+**궁금한 부분이나 지적이 필요한 부분에 대해서 피드백 주시면 감사드리겠습니다**
+
+## Refactoring
+
+이전에 탭에대해서 분리를 해봐야겠다는 생각을 바로 적용해보았습니다.
+
+<Callout variant='primary'>
+  이전에 TabList에서 variant로 구분되던 모습을 Tab을 만들어 종류를 선택할 수 있도록 하였습니다
+</Callout>
+<Callout variant='primary'>
+  TabIndicator또한 분리하여 필요할 때 Tabs안에 작성만하면 동작할 수 있도록 변경 하였습니다
+</Callout>
+
+사용할 탭의 모양은 총 두가지로 `line`상태와 `round`상태로 필요했습니다
+
+### TabProvider
+
+먼저 variant로 구분되던 부분을 없애야하기 때문에 TabProvider에서 제공하던 값을 변경해주도록 하겠습니다.
+또한 Indicator도 분리해야하기 때문에 Tab들의 정보를 가질 수 있는 ref도 공유하기로 합니다.
+
+<Callout variant='warn' title='기존'>
+`{
+stage:1,
+isFitted,
+variant
+}`
+</Callout>
+
+<Callout variant='primary' title='변경'>
+` {
+  stage:1,
+  isFitted,
+  tabRef
+ }`
+</Callout>
+
+```jsx
+const TabsProvider = ({
+  children,
+  isFitted = false,
+}: {
+  children: React.ReactNode,
+  isFitted: boolean,
+}) => {
+  const tabRef = useRef < HTMLDivElement > null;
+
+  const [state, setState] = useReducer(reducer, {
+    stage: 1,
+    isFitted,
+    tabRef,
+  });
+
+  return (
+    <TabStageContext.Provider value={state}>
+      <TabsDispatchContext.Provider value={setState}>{children}</TabsDispatchContext.Provider>
+    </TabStageContext.Provider>
+  );
+};
+```
+
+### TabList
+
+TabList는 Tab들을 받아 구분을 위한 index번호를 매겨주고 Tab들을 감싸는곳에 TabProvider에서 가져온 ref를 지정해주도록 하였습니다
+이전과 동일한 구조이지만 제공하는 value만 수정하였습니다
+
+<Callout variant='warn' title='고민포인트'>
+  Tab들의 번호를 받아 탭과 탭의 내용을 작성할 때 순서 상관없이 작성해도 동작 가능하게 하려고 했지만
+  선택된 탭의 초기값 설정이나 고려해야할 부분이 생기기도 하고 굳이 없어도 될 기능인것같아
+  제외하였고. 기존처럼 작성된 tab을 돌면서 1부터 시작하여 번호를 매기도록 하였습니다
+</Callout>
+
+```jsx
+const TabList = ({ children }: { children: React.ReactNode }) => {
+  const childArray = Children.toArray(children);
+  const { tabRef } = useStageState();
+  return (
+    <TabBox ref={tabRef}>
+      {childArray.map((child, index) => {
+        return cloneElement(child as ReactElement, { stage: index + 1 });
+      })}
+    </TabBox>
+  );
+};
+```
+
+### Tab
+
+드디어 분리를 하게 된 Tab입니다.
+두가지의 탭을 만들어야했기에 Line,Round 이렇게 두개를 만들어 주었습니다
+
+Provider를 통해 현재 선택된 Tab의 index번호와 선택된 Tab의 index를 변경하기 위한 dispatch를 적용해줍니다.
+Indicator에서 탭의 index번호를 모르기 때문에 `html data`를 이용하여 TabList에서 받은 stage값을 할당해줍니다
+
+```jsx
+export const Round = ({ stage, children }: { stage?: number; children: ReactNode }) => {
+  const currentStage = useStageState();
+  const { onChange } = useStageDispatch();
+
+  const isSelect = currentStage.stage === stage;
+
+  return (
+    <RoundTab
+      $active={isSelect}
+      $isFitted={currentStage.isFitted}
+      onClick={() => onChange(stage!)}
+      data-index={stage} >
+      <Text
+        fontStyle='label200'
+        fontWeight={isSelect ? 'bold' : 'medium'}
+        color={isSelect ? 'white' : 'gray400'} >
+        {children}
+      </Text>
+    </RoundTab>
+    );
+};
+```
+
+### TabIndicator
+
+TabIndicator는 필요할 때 작성하기만 하면 동작을 해야합니다.
+처음에 Tab들의 정보를 얻기위헤서 Provider에서부터 시작한 ref의 값을 통해서 값을 계산하여 동작하게 하였습니다.
+
+TabIndicator의 위치를 구하기 위해서는 ref의 clientHeight를 가져와 Tab의 현재 위치를 알고 적당한 위치에 위치하도록 해줍니다.
+
+현재 선택된 탭의 길이와 위치에 맞게 이동해야합니다. 계산하는 방법은 다음과 같습니다
+
+1. provider에서 현재 선택된 tab index값을 가져옵니다
+2. ref를 통해서 탭들을 순회하며 현재 선택된 index값이 아니라면 offsetWidth값을 더해주며 인디케이터가 위치해야할 값을 구해줍니다.
+3. 탭의 크기만큼 인디케이터 또한 길이가 늘어나야함으로 ref를 통해 이전에 data로 심어두었던 값과 비교하여 현재 탭을 알아내고 clientWidth값을 setting해준다
+
+크게 이렇게 3가지만 하게된다면 정상적으로 동작을 하게 됩니다.
+
+```js
+const TabIndicator = () => {
+  const { stage, tabRef } = useStageState();
+
+  const [width, setWidth] = useState<number | undefined>(0);
+  const [prevWidth, setPrevWidth] = useState<number | undefined>();
+
+  const [topPosition, setTopPosition] = useState(tabRef?.current?.clientHeight ?? 0);
+
+  const getLeftWidth = useCallback(() => {
+    let width = 0;
+    tabRef.current?.childNodes.forEach((element, elIndex) => {
+      if (elIndex + 1 < stage) {
+        width += (element as HTMLDivElement).offsetWidth + 8;
+      }
+    });
+    return width;
+  }, [stage, tabRef]);
+
+  useEffect(() => {
+    let width;
+    tabRef.current?.childNodes.forEach((element) => {
+      const temp = element as HTMLDivElement;
+      if (temp.dataset.index === String(stage)) {
+        width = temp.clientWidth;
+      }
+    });
+    setWidth(width);
+    setPrevWidth(getLeftWidth());
+  }, [getLeftWidth, stage, tabRef]);
+
+  useEffect(() => {
+    if (tabRef.current) {
+      setTopPosition(tabRef?.current?.clientHeight);
+    }
+  }, [tabRef, stage]);
+
+  return (
+    <Indicator
+      $width={width}
+      $prevWidth={prevWidth}
+      style={{ top: topPosition + 4px }}
+    ></Indicator>
+  );
+};
+
+```
+
+## 사용법
+
+```jsx
+<Tabs>
+  <Tabs.TabList>
+    <Tabs.Line>1번</Tabs.Line>
+    <Tabs.Line>2번</Tabs.Line>
+    <Tabs.Round>3번</Tabs.Round> //섞어서도 동작합니다
+  </Tabs.TabList>
+  <TabIndicator />
+  <Tabs.TabPanel>
+    <div>1번 내용</div>
+    <div>2번 내용</div>
+    <div>3번 내용</div>
+  </Tabs.TabPanel>
+</Tabs>
+```
+
+## 마무리
+
+이전에는 variant값을 통해서 한 곳에서 처리했기 때문에 분기처리를 해야했고 추가적인 형태의 Tab을 만들기에는 어려운
+구조였는데 이렇게 변경을 하고보니 좀 더 명확하게 무슨 탭인지 알 수 있었고, 테마에 맞는 Tab만을 개발하면 되어서 편리하였습니다.

@@ -1,0 +1,18 @@
+import type { NextConfig } from 'next';
+import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
+
+const withVanillaExtract = createVanillaExtractPlugin({});
+
+const nextConfig: NextConfig = {
+  transpilePackages: ['next-mdx-remote'],
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'velog.velcdn.com',
+      },
+    ],
+  },
+  cleanDistDir: true,
+};
+
+export default withVanillaExtract(nextConfig);
