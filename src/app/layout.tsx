@@ -18,8 +18,10 @@ export const metadata: Metadata = {
   },
   description: '주니어 프론트엔드 개발자 한동룡의 기술 블로그 입니다',
   openGraph: {
+    siteName: '한동룡 기술 블로그',
     title: '한동룡 기술 블로그',
     description: '주니어 프론트엔드 개발자 한동룡의 기술 블로그 입니다',
+    url: 'https://handongryong.com',
   },
   twitter: {
     card: 'summary_large_image',
