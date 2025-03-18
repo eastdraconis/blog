@@ -19,6 +19,7 @@ export const generateMetadata = async ({
       title: post?.title,
       description: post?.description,
       images: post?.image,
+      url: `https://handongryong.com/posts/${slug}`,
     },
     twitter: {
       card: 'summary_large_image',
