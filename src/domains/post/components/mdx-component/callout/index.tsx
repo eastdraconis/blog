@@ -27,7 +27,7 @@ const Callout = (props: CalloutProps) => {
     case 'primary': {
       return (
         <blockquote {...props} className={styles.primary}>
-          <div className={styles.center}>
+          <div className={styles.iconWrapper}>
             <svg
               width='20px'
               height='20px'
@@ -56,16 +56,14 @@ const Callout = (props: CalloutProps) => {
     case 'warn': {
       return (
         <blockquote {...props} className={styles.warn}>
-          <div className={styles.center}>
+          <div className={styles.iconWrapper}>
             <svg
               fill='currentColor'
               version='1.1'
               xmlns='http://www.w3.org/2000/svg'
-              // xmlns:xlink='http://www.w3.org/1999/xlink'
               width='20px'
               height='20px'
               viewBox='0 0 570 570'
-              // xml:space='preserve'
             >
               <g>
                 <path
@@ -90,7 +88,7 @@ const Callout = (props: CalloutProps) => {
     case 'caution': {
       return (
         <blockquote {...props} className={styles.caution}>
-          <div className={styles.center}>
+          <div className={styles.iconWrapper}>
             <svg
               width='20px'
               height='20px'
@@ -119,7 +117,7 @@ const Callout = (props: CalloutProps) => {
     default: {
       return (
         <blockquote {...props} className={styles.note}>
-          <div className={styles.center}>
+          <div className={styles.iconWrapper}>
             <svg
               width='20px'
               height='20px'

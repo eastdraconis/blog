@@ -60,9 +60,10 @@ export const note = style({
   marginInline: 'auto',
 });
 
-export const center = style({
+export const iconWrapper = style({
   display: 'flex',
   alignItems: 'center',
+  flexShrink: 0,
 });
 
 export const contentContainer = style({
