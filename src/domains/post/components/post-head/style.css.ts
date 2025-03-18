@@ -16,7 +16,7 @@ export const tagContainer = style({
 
 export const tag = style({
   fontSize: '0.75rem',
-  padding: '0 8px 2px',
+  padding: '2px 8px',
   border: '1px solid',
   borderColor: vars.color.text,
   borderRadius: '8px',
