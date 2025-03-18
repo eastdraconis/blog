@@ -9,9 +9,13 @@ const pretendard = localFont({
   weight: '45 920',
   variable: '--font-pretendard',
 });
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://handongryong.com'),
+  verification: {
+    other: {
+      'naver-site-verification': '4fc69b1ccb5d3fe134d2663f45be860476f4d8ef',
+    },
+  },
   title: {
     template: '%s | 한동룡 기술 블로그',
     default: '한동룡 기술 블로그',
