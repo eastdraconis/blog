@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/index',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/post/:slug',
         destination: '/posts/:slug',
         permanent: true,
