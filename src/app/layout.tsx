@@ -18,6 +18,7 @@ export const metadata: Metadata = {
       'naver-site-verification': '4fc69b1ccb5d3fe134d2663f45be860476f4d8ef',
     },
   },
+  authors: [{ name: '한동룡', url: 'https://github.com/eastdraconis' }],
   title: {
     template: '%s | 한동룡 기술 블로그',
     default: '한동룡 기술 블로그',

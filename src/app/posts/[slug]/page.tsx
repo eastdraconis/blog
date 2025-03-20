@@ -14,7 +14,6 @@ export const generateMetadata = async ({
   return {
     title: post?.title,
     description: post?.description,
-    authors: [{ name: '한동룡', url: 'https://github.com/eastdraconis' }],
     openGraph: {
       title: post?.title,
       description: post?.description,
