@@ -4,11 +4,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const baseUrl = 'https://handongryong.com';
 
-  // 모든 포스트 가져오기
-  const allPosts = getAllPosts([]);
-
-  // 날짜순으로 정렬하고 최신 15개만 선택
-  const posts = allPosts.slice(0, 15);
+  const posts = getAllPosts([]);
 
   // RSS 피드 헤더 생성
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -18,7 +14,9 @@ export async function GET() {
     <link>${baseUrl}</link>
     <description>한동룡의 기술 블로그입니다.</description>
     <language>ko</language>
+    <copyright>${new Date().getFullYear()} handongryong All rights reserved</copyright>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <pubDate>${new Date().toUTCString()}</pubDate>
     <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml"/>
     ${posts
       .map((post) => {
@@ -58,7 +56,6 @@ export async function GET() {
   </channel>
 </rss>`;
 
-  // XML 콘텐츠 타입으로 응답 반환
   return new NextResponse(rssXml, {
     headers: {
       'Content-Type': 'application/xml',
