@@ -64,7 +64,7 @@ function debounce(callback, limit = 1000) {
 `React`
 
 ```jsx
-const useDebounce(callback,limit=1000) => {
+const useDebounce = (callback, limit=1000) => {
     const timer = useRef()
 
     const debouncedFn = useCallback((...args)=>{
@@ -113,7 +113,7 @@ function throttle(callback, time = 200) {
 function useThrottle(callback,time=200){
     let wait = useRef(false)
 
-    const throttledFn = useCallback((...args){
+    const throttledFn = useCallback((...args) => {
         if(!wait.current){
             callback(...args)
             wait.current = true

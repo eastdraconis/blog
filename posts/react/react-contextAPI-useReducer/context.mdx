@@ -44,7 +44,7 @@ todo = {
 ```
 
 ```js
-function reducer((state,action)){
+function reducer(state, action) {
 	switch(action.type){
       case 'ADD_TODO':
         state.push(action.todo);
@@ -138,14 +138,12 @@ function TodoPage(){
     	dispatch({
           type:'DELETE_TODO',
           todo:{
-            id,
-            content,
-            isComplete
+            id
           }
         })
     }
     return(
-      {todostate.map(todo => (
+      {todoState.map(todo => (
        <div>
          {todo.content}<button onClick={handleDeleteTodo}>삭제</button>
        </div>))}
