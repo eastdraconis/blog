@@ -26,6 +26,9 @@ export const generateMetadata = async ({
       description: post?.description,
       images: post?.image,
     },
+    alternates: {
+      canonical: `https://handongryong.com/posts/${slug}`,
+    },
   };
 };
 
