@@ -57,7 +57,11 @@ export const getAllPosts = cache((tags: string | string[]) => {
   const allPosts = getAllMdx();
   const filteredPosts = filterPosts(allPosts, tags);
 
-  const posts = filteredPosts.sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
+  const posts = filteredPosts.sort((post1, post2) => {
+    const date1 = new Date(post1.date);
+    const date2 = new Date(post2.date);
+    return date1 > date2 ? -1 : 1;
+  });
   return posts;
 });
 
