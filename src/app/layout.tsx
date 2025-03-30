@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/global.css';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const pretendard = localFont({
   src: '../styles/font/PretendardVariable.woff2',
@@ -57,6 +59,8 @@ export default function Layout({
       <GoogleTagManager gtmId='GTM-PGSGTKHF' />
       <body>
         {children}
+        <Analytics />
+        <SpeedInsights />
         <div id='modal' />
       </body>
       <GoogleAnalytics gaId='G-Q8DZS4C2DL' />
