@@ -19,6 +19,7 @@ export const PostHead = ({ title, tags, date, readingTime }: Post) => {
 
       <div className={styles.additionalInfo}>
         <span className={styles.date}>{formatDateToKorean(date)}</span>
+        <span className={styles.separatorCircle} />
         <span className={styles.readingTime}>{readingTime}</span>
       </div>
     </div>

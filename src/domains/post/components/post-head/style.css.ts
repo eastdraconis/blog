@@ -33,7 +33,7 @@ export const title = style({
 
 export const additionalInfo = style({
   display: 'flex',
-  gap: '16px',
+  gap: '8px',
 });
 
 export const date = style({
@@ -44,4 +44,13 @@ export const date = style({
 export const readingTime = style({
   fontSize: '1rem',
   color: vars.color.gray,
+});
+
+export const separatorCircle = style({
+  color: vars.color.gray,
+  borderRadius: '50%',
+  backgroundColor: vars.color.gray,
+  width: '4px',
+  height: '4px',
+  margin: 'auto 0',
 });
