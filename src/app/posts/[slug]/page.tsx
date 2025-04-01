@@ -17,14 +17,14 @@ export const generateMetadata = async ({
     openGraph: {
       title: post?.title,
       description: post?.description,
-      images: post?.image,
+      images: post?.image ?? 'https://handongryong.com/opengraph-image.png',
       url: `https://handongryong.com/posts/${slug}`,
     },
     twitter: {
       card: 'summary_large_image',
       title: post?.title,
       description: post?.description,
-      images: post?.image,
+      images: post?.image ?? 'https://handongryong.com/twitter-image.png',
     },
     alternates: {
       canonical: `https://handongryong.com/posts/${slug}`,
