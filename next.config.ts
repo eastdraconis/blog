@@ -20,12 +20,12 @@ const nextConfig: NextConfig = {
       {
         source: '/index',
         destination: '/',
-        permanent: true,
+        statusCode: 301,
       },
       {
         source: '/post/:slug',
         destination: '/posts/:slug',
-        permanent: true,
+        statusCode: 301,
       },
     ];
   },
