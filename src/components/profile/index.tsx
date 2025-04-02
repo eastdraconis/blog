@@ -60,7 +60,7 @@ export const Profile = () => {
     <div className={styles.profileContainer}>
       <div className={styles.profileImageContainer}>
         <div className={styles.profileImageInner}>
-          <Image src={'/profile.png'} alt='profile' fill />
+          <Image src={'/profile.png'} alt='profile' fill sizes='300px' />
         </div>
       </div>
       <div className={styles.nameContainer}>

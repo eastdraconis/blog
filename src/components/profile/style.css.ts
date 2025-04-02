@@ -40,6 +40,7 @@ export const profileImageInner = style({
   height: '100%',
   transform: 'translate(5px,30px)',
   borderRadius: '50%',
+  position: 'relative',
 });
 
 export const nameContainer = style({
