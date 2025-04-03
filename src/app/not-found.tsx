@@ -1,6 +1,6 @@
 import React from 'react';
-import NotFound from '@/components/not-found';
 import { Header } from '@/components/header';
+import { NotFound } from '@/pages/not-found';
 
 export default function NotFoundPage() {
   return (

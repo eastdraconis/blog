@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import Error from '@/components/global-error';
 import { Header } from '@/components/header';
+import { GlobalError } from '@/pages/global-error';
 
-export default function GlobalError({
+export default function Error({
   error,
   reset,
 }: {
@@ -14,7 +14,7 @@ export default function GlobalError({
   return (
     <div>
       <Header />
-      <Error error={error} reset={reset} />
+      <GlobalError error={error} reset={reset} />
     </div>
   );
 }
