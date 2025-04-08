@@ -7,36 +7,21 @@ export const useTagToggle = () => {
   const searchParams = useSearchParams();
 
   const toggleTag = (tag: string) => {
-    // 현재 URL의 쿼리 파라미터 복사
     const params = new URLSearchParams(searchParams?.toString() || '');
+    const normalizedTag = tag.toLowerCase();
 
-    // 현재 태그 목록 가져오기
     const currentTags = params.get('tags')?.split(',').filter(Boolean) || [];
 
-    // 태그가 이미 있는지 확인
-    const tagIndex = currentTags.findIndex((t) => t.toLowerCase() === tag.toLowerCase());
+    const newTags = currentTags.includes(normalizedTag)
+      ? currentTags.filter((t) => t.toLowerCase() !== normalizedTag)
+      : [...currentTags, normalizedTag];
 
-    if (tagIndex >= 0) {
-      // 태그가 이미 있으면 제거
-      currentTags.splice(tagIndex, 1);
-    } else {
-      // 태그가 없으면 추가
-      currentTags.push(tag);
-    }
+    newTags.length > 0 ? params.set('tags', newTags.join(',')) : params.delete('tags');
 
-    // 태그 목록 업데이트
-    if (currentTags.length > 0) {
-      params.set('tags', currentTags.join(','));
-    } else {
-      // 태그가 없으면 쿼리 파라미터 제거
-      params.delete('tags');
-    }
-
-    // 현재 경로 가져오기
     const pathname = window.location.pathname;
+    const queryString = params.toString();
+    const newUrl = `${pathname}${queryString ? `?${queryString}` : ''}`;
 
-    // 새 URL로 이동
-    const newUrl = `${pathname}${params.toString() ? `?${params.toString()}` : ''}`;
     router.push(newUrl);
   };
 

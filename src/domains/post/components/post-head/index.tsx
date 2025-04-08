@@ -1,5 +1,5 @@
 import { Post } from '../../types/post';
-import { formatDateToKorean } from '../../libs/format-date-to-korean';
+import { formatDateToKorean } from '../../utils/format-date-to-korean';
 import * as styles from './style.css';
 
 export const PostHead = ({ title, tags, date, readingTime }: Post) => {
