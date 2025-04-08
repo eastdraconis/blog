@@ -1,13 +1,13 @@
 'use client';
 
-import { useTagToggle } from '@/domains/post/hooks/useTagToggle';
 import * as styles from './style.css';
 import { CloseIcon } from './close-icon';
+import { useTagToggle } from '@/domains/post/hooks/useTagToggle';
 
-interface TagProps {
+interface FilterTagProps {
   tag: string;
 }
-export const Tag = ({ tag }: TagProps) => {
+export const FilterTag = ({ tag }: FilterTagProps) => {
   const { toggleTag, isTagSelected } = useTagToggle();
 
   return (

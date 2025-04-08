@@ -3,7 +3,7 @@
 import { Header } from '@/components/header';
 import { PostList } from '@/domains/post/components/post-list';
 import { ContentLayout } from '@/components/layout/content-layout';
-import { FilterTag } from '@/domains/post/components/filter-tag';
+import { FilterTagGroup } from '@/domains/post/components/filter-tag-group';
 import { Post } from '@/domains/post/types/post';
 import { Footer } from '@/components/footer';
 import { useScrollRestore } from '@/hooks/use-scroll-restore';
@@ -25,7 +25,7 @@ export const Home = ({ posts, tags }: HomeProps) => {
           <div className={styles.container}>
             <section>
               <h2 className={styles.tagSectionTitle}>Tags</h2>
-              <FilterTag tags={tags} />
+              <FilterTagGroup tags={tags} />
             </section>
             <section className={styles.postListContainer}>
               <div>
