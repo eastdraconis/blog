@@ -16,7 +16,11 @@ export const useTagToggle = () => {
       ? currentTags.filter((t) => t.toLowerCase() !== normalizedTag)
       : [...currentTags, normalizedTag];
 
-    newTags.length > 0 ? params.set('tags', newTags.join(',')) : params.delete('tags');
+    if (newTags.length > 0) {
+      params.set('tags', newTags.join(','));
+    } else {
+      params.delete('tags');
+    }
 
     const pathname = window.location.pathname;
     const queryString = params.toString();
