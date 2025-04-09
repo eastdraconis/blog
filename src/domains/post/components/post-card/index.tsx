@@ -19,8 +19,8 @@ export const PostCard = ({ slug, tags, title, image }: Post) => {
 
     const rect = child.getBoundingClientRect();
 
-    const cal = Math.ceil((rect.height + 10) / 30);
-    targetRef.current.style.gridRowEnd = `span ${cal}`;
+    const cal = Math.ceil((rect.height + 20) / 34);
+    targetRef.current.style.gridRow = `auto / span ${cal}`;
   };
 
   useResizeObserver(calcGridRowEnd, targetRef);
