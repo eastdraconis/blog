@@ -11,15 +11,18 @@ export const PostCard = ({ slug, tags, title, image }: Post) => {
   const targetRef = useRef<HTMLAnchorElement | null>(null);
 
   const calcGridRowEnd = () => {
-    if (window.visualViewport?.width && window.visualViewport.width < 700) return;
     if (!targetRef.current) return;
+    if (window.visualViewport?.width && window.visualViewport.width < 700) {
+      targetRef.current.style.gridRow = 'auto';
+      return;
+    }
 
     const child = targetRef.current.children[0];
     if (!child) return;
 
     const rect = child.getBoundingClientRect();
 
-    const cal = Math.ceil((rect.height + 20) / 34);
+    const cal = Math.ceil((rect.height + 24) / 34);
     targetRef.current.style.gridRow = `auto / span ${cal}`;
   };
 

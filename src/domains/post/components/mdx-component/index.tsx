@@ -64,11 +64,9 @@ export const components: MDXComponents = {
     </ol>
   ),
   ul: ({ children, ...rest }) => (
-    <div>
-      <ul className={styles.ul} {...rest}>
-        {children}
-      </ul>
-    </div>
+    <ul className={styles.ul} {...rest}>
+      {children}
+    </ul>
   ),
   li: ({ children, ...rest }) => (
     <li className={styles.li} {...rest}>

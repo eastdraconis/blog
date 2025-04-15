@@ -6,11 +6,6 @@ export const container = style({
   borderRadius: '24px',
   display: 'block',
   overflow: 'hidden',
-  '@media': {
-    '(max-width: 700px)': {
-      gridColumnEnd: 'auto',
-    },
-  },
   gridColumnEnd: 'span 6',
 });
 
