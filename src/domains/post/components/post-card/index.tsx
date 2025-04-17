@@ -11,8 +11,9 @@ export const PostCard = ({ slug, tags, title, image }: Post) => {
   const targetRef = useRef<HTMLAnchorElement | null>(null);
 
   const calcGridRowEnd = () => {
-    if (!targetRef.current) return;
-    if (window.visualViewport?.width && window.visualViewport.width < 700) {
+    if (!targetRef.current || !window.visualViewport) return;
+
+    if (window.visualViewport.width < 700) {
       targetRef.current.style.gridRow = 'auto';
       return;
     }
