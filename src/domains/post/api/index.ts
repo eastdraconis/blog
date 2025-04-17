@@ -9,7 +9,7 @@ import { filterPosts } from '../utils/filter-post';
 const postsDirectory = join(process.cwd(), 'posts');
 
 // mdx 파일을 포스트 객체로 변환
-const mdxFileToPost = (filePath: string): Post | null => {
+const mdxFileToPost = cache((filePath: string): Post | null => {
   if (!filePath.endsWith('mdx')) return null;
 
   const { data, content } = matter(fs.readFileSync(filePath, 'utf8'));
@@ -22,7 +22,7 @@ const mdxFileToPost = (filePath: string): Post | null => {
     content,
     tags,
   } as Post;
-};
+});
 
 // 전체 mdx 파일 목록 조회
 export const getAllMdx = cache((dir: string = postsDirectory): Post[] => {
@@ -39,10 +39,10 @@ export const getAllMdx = cache((dir: string = postsDirectory): Post[] => {
 });
 
 // 특정 포스트 조회
-export const getPostBySlug = (slug: string) => {
+export const getPostBySlug = cache((slug: string) => {
   const allPosts = getAllMdx();
   return allPosts.find((post) => post.slug === slug);
-};
+});
 
 // 포스트 조회 태그 필터링
 export const getAllPosts = cache((tags: string | string[]) => {
