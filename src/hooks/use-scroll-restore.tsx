@@ -22,7 +22,7 @@ export const useScrollRestore = () => {
       // 현재 경로에 대한 저장된 스크롤 위치가 있으면 복원
       if (scrollPositionsRef.current[pathname]) {
         setTimeout(() => {
-          window.scrollTo({ top: scrollPositionsRef.current[pathname], behavior: 'smooth' });
+          window.scrollTo({ top: scrollPositionsRef.current[pathname], behavior: 'instant' });
         }, 0);
       }
     } catch (error) {
