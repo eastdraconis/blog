@@ -14,7 +14,7 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://handongryong.com'),
+  metadataBase: new URL('https://www.handongryong.com'),
   verification: {
     other: {
       'naver-site-verification': '4fc69b1ccb5d3fe134d2663f45be860476f4d8ef',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     siteName: '한동룡 기술 블로그',
     title: '한동룡 기술 블로그',
     description: '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
-    url: 'https://handongryong.com',
+    url: 'https://www.handongryong.com',
     type: 'website',
   },
   twitter: {

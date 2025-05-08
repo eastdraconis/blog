@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
     alternates: {
-      canonical: 'https://handongryong.com',
+      canonical: 'https://www.handongryong.com',
     },
   };
 };

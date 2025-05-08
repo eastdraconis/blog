@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://handongryong.com/sitemap.xml
+Sitemap: https://www.handongryong.com/sitemap.xml

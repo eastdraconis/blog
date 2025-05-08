@@ -5,7 +5,6 @@ const withVanillaExtract = createVanillaExtractPlugin({});
 
 const nextConfig: NextConfig = {
   transpilePackages: ['next-mdx-remote'],
-
   images: {
     minimumCacheTTL: 86400,
     remotePatterns: [

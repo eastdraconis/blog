@@ -3,7 +3,7 @@ import { getAllPosts } from '@/domains/post/api';
 import { Post } from '@/domains/post/types/post';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://handongryong.com';
+  const baseUrl = 'https://www.handongryong.com';
 
   // 모든 포스트 가져오기
   const posts = getAllPosts([]);

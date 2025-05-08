@@ -2,7 +2,7 @@ import { getAllPosts } from '@/domains/post/api';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = 'https://handongryong.com';
+  const baseUrl = 'https://www.handongryong.com';
 
   const posts = getAllPosts([]);
 
