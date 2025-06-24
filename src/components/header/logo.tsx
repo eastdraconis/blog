@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import * as styles from './style.css';
+import * as styles from './header.css';
 
 export const Logo = () => {
   return (
