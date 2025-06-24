@@ -1,6 +1,6 @@
 'use client';
 
-import { Header } from '@/components/header';
+import { Header } from '@/components/header/header';
 import { PostList } from '@/domains/post/components/post-list';
 import { ContentLayout } from '@/components/layout/content-layout';
 import { FilterTagGroup } from '@/domains/post/components/filter-tag-group';
