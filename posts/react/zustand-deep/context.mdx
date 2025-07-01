@@ -1,0 +1,189 @@
+---
+slug: zustand-deep
+title: Zustand, 어떻게 동작할까?
+description: zustand가 어떻게 구현이 되어있고 동작을 어떻게 하는지 살펴봅니다
+image:
+tags:
+  - react
+  - 상태관리
+date: 2025-07-01
+---
+
+## Zustand란
+
+Zustand는 현재 React 생태계에서 가장 인기 있는 상태 관리 라이브러리입니다.
+독일어로 "상태(state)"를 의미하는 이 라이브러리는 일본의 개발자 다이시 카토가 만들었으며, 같은 개발자가 만든 Jotai도 함께 현대적인 상태관리로 주목 받고 있습니다.
+
+Zustand는 **Flux패턴**을 기반으로 설계되었습니다. Redux와 유사한 단방향 데이터 플로우를 채택하였고, 보일러플레이트 코드를 대폭 줄였습니다.
+
+![](/react/zustand-deep/1.png)
+
+### 장점/단점
+
+**장점**
+
+- 작은 번들 사이즈: **588B(gzip)** 아주 작은 라이브러리입니다.
+- React 외부에서도 사용 가능
+- DevTools 지원: Redux DevTools와 호환 됩니다.
+- Context를 wrapping하지 않습니다.
+  **단점**
+- 복잡한 상태 관리가 어렵습니다.
+
+## 사용방법
+
+기본 스토어 생성
+
+```tsx
+import { create } from 'zustand';
+
+const useStore = create((set) => ({
+  bears: 0,
+  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  removeAllBears: () => set({ bears: 0 }),
+  updateBears: (newBears) => set({ bears: newBears }),
+}));
+```
+
+컴포넌트에서 사용
+
+```tsx
+function BearCounter() {
+  const bears = useStore((state) => state.bears);
+  return <h1>{bears} bears around here...</h1>;
+}
+
+function Controls() {
+  const increasePopulation = useStore((state) => state.increasePopulation);
+  return <button onClick={increasePopulation}>one up</button>;
+}
+```
+
+## 내부 구현 뜯어보기
+
+### create 함수의 내부 구조
+
+```ts
+const createImpl = <T>(createState: StateCreator<T, [], []>) => {
+  const api = createStore(createState);
+
+  const useBoundStore: any = (selector?: any) => useStore(api, selector);
+
+  Object.assign(useBoundStore, api);
+
+  return useBoundStore;
+};
+
+export const create = (<T>(createState: StateCreator<T, [], []> | undefined) =>
+  createState ? createImpl(createState) : createImpl) as Create;
+```
+
+`create` 함수는 실제로는 `createImpl`의 래퍼입니다. 실제 구현은 `createImpl`에서 이루어지고 코드를 살펴보면 다음과 같습니다
+
+1. **createStore로 스토어 API 생성**
+2. **useStore로 React Hook을 생성**
+3. **Object.assign으로 API 매서드들을 Hook에 병합**
+
+### createStore의 핵심 로직
+
+```ts
+const createStoreImpl: CreateStoreImpl = (createState) => {
+  type TState = ReturnType<typeof createState>;
+  type Listener = (state: TState, prevState: TState) => void;
+  let state: TState;
+  const listeners: Set<Listener> = new Set();
+
+  const setState: StoreApi<TState>['setState'] = (partial, replace) => {
+    const nextState =
+      typeof partial === 'function' ? (partial as (state: TState) => TState)(state) : partial;
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state =
+        (replace ?? (typeof nextState !== 'object' || nextState === null))
+          ? (nextState as TState)
+          : Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+
+  const getState: StoreApi<TState>['getState'] = () => state;
+
+  const getInitialState: StoreApi<TState>['getInitialState'] = () => initialState;
+
+  const subscribe: StoreApi<TState>['subscribe'] = (listener) => {
+    listeners.add(listener);
+    // Unsubscribe
+    return () => listeners.delete(listener);
+  };
+
+  const api = { setState, getState, getInitialState, subscribe };
+  const initialState = (state = createState(setState, getState, api));
+  return api as any;
+};
+
+export const createStore = ((createState) =>
+  createState ? createStoreImpl(createState) : createStoreImpl) as CreateStore;
+```
+
+여기도 동일하게 `createStore`의 경우에는 `createStoreImpl` 래핑이고 실제 구현 부는 `createStoreImpl`에 존재합니다.
+
+**핵심 구현 포인트:**
+
+- **클로저를 활용한 상태 캡슐화:** `state`, `initialState`, `listeners`가 클로저 내부에서 관리됩니다.
+- **Set을 활용한 리스너 관리:** 중복 방지와 빠른 추가/삭제
+- **Object.is를 사용한 변경 감지:** 얕은 비교로 성능 최적화
+- **조건부 상태 업데이트:** `replace` 플래그와 특정 조건에 따라서 얕은 복사
+
+마지막에 있는 `initialState` 선언할 때 문법이 궁금하실 수 있을 것 같은데요
+이는 할당 문법으로 `state`와 `initialState`에 **동시에 값을 할당하기 위해서 작성된 문법입니다.**
+
+### useStore 리액트와 동기화
+
+```tsx
+export function useStore<S extends ReadonlyStoreApi<unknown>, U>(
+  api: S,
+  selector: (state: ExtractState<S>) => U,
+): U;
+
+export function useStore<TState, StateSlice>(
+  api: ReadonlyStoreApi<TState>,
+  selector: (state: TState) => StateSlice = identity as any,
+) {
+  const slice = React.useSyncExternalStore(
+    api.subscribe,
+    () => selector(api.getState()),
+    () => selector(api.getInitialState()),
+  );
+  React.useDebugValue(slice);
+  return slice;
+}
+```
+
+`useStore`의 핵심은 `React.useSyncExternalStore`입니다.
+외부 스토어와 리액트와 동기화를 하기 위한 Hook으로 위에서 생성한 스토어를 연결합니다.
+
+- 첫 번째 인자: 구독 함수 (`api.subscribe`)
+- 두 번째 인자: 현재 상태를 가져오는 함수
+- 세 번째 인자: 서버 사이드 렌더링을 위한 초기 상태
+
+### 선택자 최적화
+
+zustand는 **상태가 변경되었을 때만 리렌더를 진행합니다.**
+
+```tsx
+// 성능 좋음: 특정 값만 구독
+const bears = useStore((state) => state.bears);
+
+// 성능 나쁨: 전체 객체 구독
+const { bears, increasePopulation } = useStore((state) => state);
+```
+
+## 마치며
+
+직접 Zustand의 내부 코드를 뜯어보면서, 단순히 라이브러리를 사용하는 것과 이해하는 것의 차이를 크게 느꼈습니다.
+익숙한 자바스크립트 개념들이 어떻게 실제 라이브러리 구현에 녹아 있는지 보는 과정이 무척 흥미로웠습니다.
+앞으로도 오픈소스의 내부를 자주 들여다 보면서 코드를 읽는 역량과 양질의 코드를 보며 성장해나아가고 오픈소스에 직접 기여할 수 있으면 좋겠다는 동기부여가 되었습니다.
+
+### Reference
+
+- https://zustand.docs.pmnd.rs/getting-started/introduction
+- https://github.com/pmndrs/zustand
