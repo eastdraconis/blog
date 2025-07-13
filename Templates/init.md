@@ -1,8 +1,8 @@
 ---
-slug: 
-title: 
-description: 
-images: 
-tags: 
+slug:
+title:
+description:
+image:
+tags:
 date:
 ---
