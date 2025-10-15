@@ -1,6 +1,6 @@
-import { getAllPosts, getAllTags } from '@/domains/post/api';
-import { Home } from '@/pages/home';
-import { Metadata } from 'next';
+import { getAllPosts, getAllTags } from '@/app/_domains/post/api';
+import { Home } from '@/app/_pages/home';
+import { Metadata } from 'next/types';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {

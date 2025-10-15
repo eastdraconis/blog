@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
-import { getAllPosts } from '@/domains/post/api';
-import { Post } from '@/domains/post/types/post';
+import { getAllPosts } from '@/app/_domains/post/api';
+import { Post } from '@/app/_domains/post/types/post';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.handongryong.com';

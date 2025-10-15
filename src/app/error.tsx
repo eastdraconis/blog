@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Header } from '@/components/header/header';
-import { GlobalError } from '@/pages/global-error';
+import { Header } from '@/app/_components/header/header';
+import { GlobalError } from '@/app/_pages/global-error';
 
 export default function Error({
   error,

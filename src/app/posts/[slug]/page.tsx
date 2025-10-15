@@ -1,5 +1,5 @@
-import { getAllMdx, getPostBySlug } from '@/domains/post/api';
-import { PostView } from '@/pages/post-view';
+import { getAllMdx, getPostBySlug } from '@/app/_domains/post/api';
+import { PostView } from '@/app/_pages/post-view';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
