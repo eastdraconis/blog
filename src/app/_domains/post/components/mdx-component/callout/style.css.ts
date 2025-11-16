@@ -3,11 +3,11 @@ import { style } from '@vanilla-extract/css';
 
 export const title = style({
   marginBottom: '8px',
-  fontSize: '1.25rem',
-  fontWeight: 700,
+  fontSize: '1rem',
+  fontWeight: 600,
   '@media': {
     '(max-width: 768px)': {
-      fontSize: '1rem',
+      fontSize: '0.875rem',
     },
   },
 });
