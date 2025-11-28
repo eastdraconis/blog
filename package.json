@@ -4,18 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "copy-images": "node scripts/copy-images.js",
     "prebuild": "npm run copy-images",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build --webpack ",
+    "start": "next start --webpack ",
     "lint": "next lint"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "^15.5.5",
-    "@next/third-parties": "^15.5.5",
+    "@next/mdx": "^16.0.5",
+    "@next/third-parties": "^16.0.5",
     "@types/mdx": "^2.0.13",
     "@vanilla-extract/css": "^1.17.4",
     "@vanilla-extract/recipes": "^0.5.7",
@@ -24,7 +24,7 @@
     "date-fns": "^4.1.0",
     "flexsearch": "^0.8.212",
     "gray-matter": "^4.0.3",
-    "next": "15.5.5",
+    "next": "16.0.5",
     "next-mdx-remote": "^5.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -35,15 +35,15 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@vanilla-extract/next-plugin": "^2.4.14",
     "@eslint/eslintrc": "^3.3.1",
     "@types/node": "^20.19.21",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@vanilla-extract/next-plugin": "^2.4.14",
     "eslint": "^9.37.0",
-    "eslint-config-next": "15.2.0",
+    "eslint-config-next": "16.0.5",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d"
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }
