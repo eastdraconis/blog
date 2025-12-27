@@ -10,7 +10,7 @@ export const iconWrapper = style({
   borderRadius: '50%',
   transition: 'all 0.2s',
   ':hover': {
-    backgroundColor: vars.color.gray,
+    backgroundColor: vars.color.success,
   },
 });
 

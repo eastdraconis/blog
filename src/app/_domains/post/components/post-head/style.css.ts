@@ -22,14 +22,21 @@ export const tag = style({
   borderRadius: '8px',
 });
 
-export const title = style({
-  textAlign: 'center',
-  textWrap: 'pretty',
-  fontSize: '2rem',
-  fontWeight: 'bold',
-  lineHeight: 1.55,
-  color: vars.color.text,
-});
+export const title = style([
+  {
+    textAlign: 'center',
+    textWrap: 'pretty',
+    fontWeight: 'bold',
+    lineHeight: 1.55,
+    fontSize: '2rem',
+    color: vars.color.text,
+    '@media': {
+      'screen and (max-width: 768px)': {
+        fontSize: '1.75rem',
+      },
+    },
+  },
+]);
 
 export const additionalInfo = style({
   display: 'flex',

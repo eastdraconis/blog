@@ -22,6 +22,11 @@ export const title2 = style({
   fontWeight: 'bold',
   lineHeight: 1.55,
   maxWidth: '640px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      fontSize: '1.5rem',
+    },
+  },
 });
 
 export const title3 = style({
@@ -33,6 +38,11 @@ export const title3 = style({
   fontWeight: 'bold',
   lineHeight: 1.55,
   maxWidth: '640px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      fontSize: '1.25rem',
+    },
+  },
 });
 
 export const title4 = style({
@@ -44,6 +54,11 @@ export const title4 = style({
   fontWeight: 'bold',
   lineHeight: 1.55,
   maxWidth: '640px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      fontSize: '1rem',
+    },
+  },
 });
 
 export const paragraph = style({
@@ -55,8 +70,8 @@ export const paragraph = style({
   lineHeight: 1.55,
   maxWidth: '640px',
   '@media': {
-    '(max-width: 768px)': {
-      fontSize: '17px',
+    'screen and (max-width: 768px)': {
+      fontSize: '16px',
     },
   },
 });
@@ -68,11 +83,11 @@ export const link = style({
   textDecoration: 'underline',
   position: 'relative',
   ':hover': {
-    color: '#71a3c1',
+    color: '#b6d0eb',
   },
   '@media': {
-    '(max-width: 768px)': {
-      fontSize: '17px',
+    'screen and (max-width: 768px)': {
+      fontSize: '16px',
     },
   },
 });
@@ -130,8 +145,8 @@ export const ol = style({
     fontWeight: 'bold',
   },
   '@media': {
-    '(max-width: 768px)': {
-      fontSize: '17px',
+    'screen and (max-width: 768px)': {
+      fontSize: '16px',
     },
   },
 });
@@ -145,8 +160,8 @@ export const ul = style({
   listStyleType: 'disc',
   listStylePosition: 'inside',
   '@media': {
-    '(max-width: 768px)': {
-      fontSize: '17px',
+    'screen and (max-width: 768px)': {
+      fontSize: '16px',
     },
   },
 });
@@ -185,16 +200,16 @@ export const image = style({
 });
 
 export const code = style({
-  padding: '1px 4px',
+  padding: '2px 4px',
   borderRadius: '4px',
-  backgroundColor: 'rgba(135, 131, 120, .15)',
+  backgroundColor: 'rgba(241, 240, 236, 1)',
   fontSize: '14px',
   textWrap: 'nowrap',
   lineHeight: 1.55,
-  color: '#a95937',
+  color: '#ee6f8b',
   fontWeight: 500,
   '@media': {
-    '(max-width: 768px)': {
+    'screen and (max-width: 768px)': {
       fontSize: '12px',
     },
   },
@@ -229,7 +244,7 @@ globalStyle('figure >pre', {
   overflow: 'auto',
   fontSize: '16px',
   '@media': {
-    '(max-width: 768px)': {
+    'screen and (max-width: 768px)': {
       fontSize: '12px',
     },
   },

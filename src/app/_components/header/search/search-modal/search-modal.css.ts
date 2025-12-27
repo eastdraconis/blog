@@ -1,5 +1,27 @@
 import { vars } from '@/app/_styles/theme.css';
-import { style } from '@vanilla-extract/css';
+import { keyframes, style } from '@vanilla-extract/css';
+
+// 오버레이 페이드 인 애니메이션
+const fadeIn = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 1,
+  },
+});
+
+// 모달 컨테이너 슬라이드 + 스케일 애니메이션
+const slideUpAndScale = keyframes({
+  from: {
+    opacity: 0,
+    transform: 'translateY(-20px) scale(0.95)',
+  },
+  to: {
+    opacity: 1,
+    transform: 'translateY(0) scale(1)',
+  },
+});
 
 export const modalOverlay = style({
   position: 'fixed',
@@ -15,6 +37,7 @@ export const modalOverlay = style({
   justifyContent: 'center',
   zIndex: 1000,
   padding: '80px 20px 20px',
+  animation: `${fadeIn} 0.2s ease-out`,
 });
 
 export const modalContainer = style({
@@ -28,6 +51,7 @@ export const modalContainer = style({
   maxHeight: 'calc(100dvh - 100px)',
   overflow: 'hidden',
   zIndex: 1000,
+  animation: `${slideUpAndScale} 0.3s cubic-bezier(0.16, 1, 0.3, 1)`,
 });
 
 export const searchInputWrapper = style({

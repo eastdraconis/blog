@@ -1,4 +1,13 @@
-import { style } from '@vanilla-extract/css';
+import { vars } from '@/app/_styles/theme.css';
+import { keyframes, style } from '@vanilla-extract/css';
+
+const slideFadeIn = keyframes({
+  '0%': {
+    opacity: 0,
+    boxShadow: 'none',
+    transform: 'scale(1) translateY(15vh)',
+  },
+});
 
 export const container = style({
   position: 'relative',
@@ -6,7 +15,26 @@ export const container = style({
   borderRadius: '24px',
   display: 'block',
   overflow: 'hidden',
-  gridColumnEnd: 'span 6',
+  gridColumnEnd: 'span 4',
+  selectors: {
+    '&:hover': {
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.12)',
+    },
+  },
+  '@media': {
+    '(max-width: 1024px)': {
+      gridColumnEnd: 'span 6',
+    },
+    '(prefers-reduced-motion: no-preference)': {
+      '@supports': {
+        '(animation-timeline: view())': {
+          animation: `${slideFadeIn} both`,
+          animationTimeline: 'view()',
+          animationRange: 'contain -60% contain 50%',
+        },
+      },
+    },
+  },
 });
 
 export const postCardImage = style({
@@ -18,6 +46,7 @@ export const postCardImage = style({
     },
   },
 });
+
 export const imageWrapper = style({
   height: '100%',
   position: 'absolute',
@@ -39,7 +68,7 @@ export const image = style({
   transition: 'all 0.3s ease-in-out',
   selectors: {
     [`${container}:hover &`]: {
-      transform: 'scale(1.1)',
+      transform: 'translateY(-2px)',
     },
   },
 });
@@ -58,6 +87,10 @@ export const dateWrapper = style({
 
 export const date = style({
   fontSize: '12px',
+  color: vars.color.gray,
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
 });
 
 export const title = style({
@@ -67,6 +100,7 @@ export const title = style({
 
 export const tagContainer = style({
   display: 'flex',
+  flex: 1,
   gap: '8px',
 });
 
@@ -82,4 +116,10 @@ export const contentContainer = style({
   flexDirection: 'column',
   gap: '16px',
   padding: '32px',
+});
+
+export const infoContainer = style({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 });

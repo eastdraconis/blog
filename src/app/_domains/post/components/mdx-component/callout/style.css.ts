@@ -14,7 +14,7 @@ export const title = style({
 
 export const primary = style({
   display: 'flex',
-  backgroundColor: vars.color.success,
+  backgroundColor: '#d4e4f0',
   wordBreak: 'keep-all',
   borderRadius: '8px',
   padding: '10px 16px',
@@ -26,7 +26,7 @@ export const primary = style({
 
 export const caution = style({
   display: 'flex',
-  backgroundColor: vars.color.caution,
+  backgroundColor: '#f0d9cc',
   wordBreak: 'keep-all',
   borderRadius: '8px',
   padding: '10px 16px',
@@ -38,7 +38,7 @@ export const caution = style({
 
 export const warn = style({
   display: 'flex',
-  backgroundColor: vars.color.warn,
+  backgroundColor: '#f7ebc9',
   wordBreak: 'keep-all',
   borderRadius: '8px',
   padding: '10px 16px',

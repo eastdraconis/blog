@@ -14,7 +14,7 @@ export const container = style({
     '(min-width:768px)': {
       padding: '0 64px',
       paddingTop: '64px',
-      maxWidth: `calc(900px + ${64 * 2}px)`,
+      maxWidth: `calc(1200px + ${64 * 2}px)`,
     },
   },
 });

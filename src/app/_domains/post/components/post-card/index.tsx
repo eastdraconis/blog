@@ -6,8 +6,9 @@ import * as styles from './style.css';
 import { Post } from '../../types/post';
 import { useRef } from 'react';
 import { useResizeObserver } from '@/app/_hooks/use-resize-observer';
+import { formatDateToKorean } from '../../utils/format-date-to-korean';
 
-export const PostCard = ({ slug, tags, title, image }: Post) => {
+export const PostCard = ({ slug, tags, title, image, date }: Post) => {
   const targetRef = useRef<HTMLAnchorElement | null>(null);
 
   const calcGridRowEnd = () => {
@@ -49,12 +50,15 @@ export const PostCard = ({ slug, tags, title, image }: Post) => {
         )}
         <div className={styles.contentContainer}>
           <h2 className={styles.title}>{title}</h2>
-          <div className={styles.tagContainer}>
-            {tags.map((tag) => (
-              <span className={styles.tag} key={tag}>
-                {tag}
-              </span>
-            ))}
+          <div className={styles.infoContainer}>
+            <div className={styles.tagContainer}>
+              {tags.map((tag) => (
+                <span className={styles.tag} key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className={styles.date}>{formatDateToKorean(date)}</div>
           </div>
         </div>
       </div>

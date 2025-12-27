@@ -14,7 +14,8 @@ export const container = recipe({
   variants: {
     selected: {
       true: {
-        backgroundColor: vars.color.success,
+        backgroundColor: '#b6d0eb',
+        color: 'white',
       },
       false: {
         backgroundColor: vars.color.info,
