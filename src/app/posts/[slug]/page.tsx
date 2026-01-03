@@ -12,18 +12,18 @@ export const generateMetadata = async ({
   const post = getPostBySlug(slug);
 
   return {
-    title: post?.title,
-    description: post?.description,
+    title: post?.title ?? '한동룡 기술 블로그',
+    description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
     openGraph: {
-      title: post?.title,
-      description: post?.description,
+      title: post?.title ?? '한동룡 기술 블로그',
+      description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
       images: post?.image ?? 'https://www.handongryong.com/opengraph-image.png',
       url: `https://www.handongryong.com/posts/${slug}`,
     },
     twitter: {
       card: 'summary_large_image',
-      title: post?.title,
-      description: post?.description,
+      title: post?.title ?? '한동룡 기술 블로그',
+      description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
       images: post?.image ?? 'https://www.handongryong.com/twitter-image.png',
     },
     alternates: {
