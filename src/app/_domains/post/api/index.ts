@@ -3,7 +3,6 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { Post } from '../types/post';
 import { calculateReadingTime } from '../utils/calculate-reading-time';
-import { cache } from 'react';
 import { filterPosts } from '../utils/filter-post';
 
 const postsDirectory = join(process.cwd(), 'posts');
