@@ -8,33 +8,47 @@ export const generateMetadata = async ({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> => {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+  try {
+    const { slug } = await params;
+    const post = await getPostBySlug(slug);
 
-  return {
-    title: post?.title ?? '한동룡 기술 블로그',
-    description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
-    openGraph: {
+    if (!post) {
+      return {
+        title: '한동룡 기술 블로그',
+        description: '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
+      };
+    }
+
+    return {
       title: post?.title ?? '한동룡 기술 블로그',
       description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
-      images: post?.image ?? 'https://www.handongryong.com/opengraph-image.png',
-      url: `https://www.handongryong.com/posts/${slug}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post?.title ?? '한동룡 기술 블로그',
-      description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
-      images: post?.image ?? 'https://www.handongryong.com/twitter-image.png',
-    },
-    alternates: {
-      canonical: `https://www.handongryong.com/posts/${slug}`,
-    },
-  };
+      openGraph: {
+        title: post?.title ?? '한동룡 기술 블로그',
+        description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
+        images: post?.image ?? 'https://www.handongryong.com/opengraph-image.png',
+        url: `https://www.handongryong.com/posts/${slug}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post?.title ?? '한동룡 기술 블로그',
+        description: post?.description ?? '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
+        images: post?.image ?? 'https://www.handongryong.com/twitter-image.png',
+      },
+      alternates: {
+        canonical: `https://www.handongryong.com/posts/${slug}`,
+      },
+    };
+  } catch {
+    return {
+      title: '한동룡 기술 블로그',
+      description: '프론트엔드 개발자 한동룡의 기술 블로그 입니다',
+    };
+  }
 };
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -43,8 +57,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return <PostView post={post} />;
 }
 
-export function generateStaticParams() {
-  const mdxs = getAllMdx();
+export async function generateStaticParams() {
+  const mdxs = await getAllMdx();
   return mdxs.map((post) => ({ slug: post.slug }));
 }
 

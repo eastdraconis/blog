@@ -12,8 +12,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ tags?: string }> }) => {
   const tags = (await searchParams).tags?.split(',') || [];
-  const posts = getAllPosts(tags);
-  const allTags = getAllTags();
+  const posts = await getAllPosts(tags);
+  const allTags = await getAllTags();
 
   return <Home posts={posts} tags={allTags} />;
 };
