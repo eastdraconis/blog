@@ -85,7 +85,7 @@ class SearchIndexManager {
     console.log('🔍 Initializing search indexes...');
     const startTime = Date.now();
 
-    const posts = getAllMdx();
+    const posts = await getAllMdx();
     this.indexedPostCount = posts.length;
 
     // 표준 검색 인덱스 (단어 단위 검색)
