@@ -9,7 +9,7 @@ import { filterPosts } from '../utils/filter-post';
 const postsDirectory = join(process.cwd(), 'posts');
 
 // mdx 파일을 포스트 객체로 변환
-const mdxFileToPost = cache((filePath: string): Post | null => {
+const mdxFileToPost = (filePath: string): Post | null => {
   if (!filePath.endsWith('mdx')) return null;
 
   const { data, content } = matter(fs.readFileSync(filePath, 'utf8'));
@@ -22,10 +22,10 @@ const mdxFileToPost = cache((filePath: string): Post | null => {
     content,
     tags,
   } as Post;
-});
+};
 
 // 전체 mdx 파일 목록 조회
-export const getAllMdx = cache((dir: string = postsDirectory): Post[] => {
+export const getAllMdx = (dir: string = postsDirectory): Post[] => {
   const files = fs.readdirSync(dir);
 
   return files.flatMap((file) => {
@@ -36,16 +36,16 @@ export const getAllMdx = cache((dir: string = postsDirectory): Post[] => {
     const post = mdxFileToPost(fullPath);
     return post ? [post] : [];
   });
-});
+};
 
 // 특정 포스트 조회
-export const getPostBySlug = cache((slug: string) => {
+export const getPostBySlug = (slug: string) => {
   const allPosts = getAllMdx();
   return allPosts.find((post) => post.slug === slug);
-});
+};
 
 // 포스트 조회 태그 필터링
-export const getAllPosts = cache((tags: string | string[]) => {
+export const getAllPosts = (tags: string | string[]) => {
   const allPosts = getAllMdx();
   const filteredPosts = filterPosts(allPosts, tags);
 
@@ -55,14 +55,14 @@ export const getAllPosts = cache((tags: string | string[]) => {
     return date1 > date2 ? -1 : 1;
   });
   return posts;
-});
+};
 
 // 전체 태그 조회
-export const getAllTags = cache(() => {
+export const getAllTags = () => {
   const allPosts = getAllMdx();
 
   const allTags = allPosts.flatMap((post) => post.tags);
 
   const uniqueSortedTags = [...new Set(allTags)].sort((a, b) => b.localeCompare(a));
   return uniqueSortedTags;
-});
+};
