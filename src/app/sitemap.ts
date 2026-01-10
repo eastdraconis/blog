@@ -2,11 +2,11 @@ import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/app/_domains/post/api';
 import { Post } from '@/app/_domains/post/types/post';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.handongryong.com';
 
   // 모든 포스트 가져오기
-  const posts = getAllPosts([]);
+  const posts = await getAllPosts([]);
 
   // 포스트 URL 생성
   const postUrls = posts.map((post: Post) => ({

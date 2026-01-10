@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const baseUrl = 'https://www.handongryong.com';
 
-  const posts = getAllPosts([]);
+  const posts = await getAllPosts([]);
 
   // RSS 피드 헤더 생성
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
