@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import { css } from '../../styled-system/css';
+
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -84,7 +84,7 @@ export default function Layout({
     >
       <GoogleTagManager gtmId='GTM-PGSGTKHF' />
       <body
-    
+
       >
         {children}
         <Analytics />

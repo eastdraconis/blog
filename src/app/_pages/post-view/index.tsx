@@ -22,7 +22,7 @@ export const PostView = ({ post }: PostProps) => {
   return (
     <>
       <Header />
-      <main>
+      <main className={css({bg: 'background',width: '100%'})}>
         <ContentLayout>
           <article>
             <PostHead {...post} />

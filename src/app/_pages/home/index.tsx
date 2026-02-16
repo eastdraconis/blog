@@ -20,7 +20,7 @@ export const Home = ({ posts, tags }: HomeProps) => {
   return (
     <>
       <Header />
-      <main className={css({bg: 'background'})}>
+      <main className={css({bg: 'background',width: '100%'})}>
         <ContentLayout>
           <div className={css({
   display: 'flex',
