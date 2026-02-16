@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { QrModal } from './qr-modal';
 import { CoffeeIcon } from './coffee-icon';
-import * as styles from './style.css';
+import { css } from '../../../../../styled-system/css';
 
 export const GiveCoffeeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,14 @@ export const GiveCoffeeButton = () => {
         aria-expanded={isOpen ? 'true' : 'false'}
         name='give-coffee'
         onClick={openModal}
-        className={styles.buttonWrapper}
+        className={css({
+  padding: '4px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  _hover: {
+    backgroundColor: 'var(--colors-success)',
+  },
+})}
       >
         <CoffeeIcon />
       </button>

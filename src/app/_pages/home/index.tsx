@@ -7,7 +7,7 @@ import { FilterTagGroup } from '@/app/_domains/post/components/filter-tag-group'
 import { Post } from '@/app/_domains/post/types/post';
 import { Footer } from '@/app/_components/footer';
 import { useScrollRestore } from '@/app/_hooks/use-scroll-restore';
-import * as styles from './style.css';
+import { css } from '../../../../styled-system/css';
 
 interface HomeProps {
   posts: Post[];
@@ -20,16 +20,29 @@ export const Home = ({ posts, tags }: HomeProps) => {
   return (
     <>
       <Header />
-      <main>
+      <main className={css({bg: 'background'})}>
         <ContentLayout>
-          <div className={styles.container}>
+          <div className={css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '32px',
+  paddingBottom: '80px',
+})}>
             <section>
-              <h2 className={styles.tagSectionTitle}>Tags</h2>
+              <h2 className={css({
+  fontSize: '2rem',
+  fontWeight: 'bold',
+  marginBottom: '2rem',
+})}>Tags</h2>
               <FilterTagGroup tags={tags} />
             </section>
-            <section className={styles.postListContainer}>
+            <section className={css({})}>
               <div>
-                <h2 className={styles.postSectionTitle}>Posts</h2>
+                <h2 className={css({
+  fontSize: '2rem',
+  fontWeight: 'bold',
+  marginBottom: '2rem',
+})}>Posts</h2>
               </div>
               <div>
                 <PostList posts={posts} />

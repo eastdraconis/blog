@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import * as styles from './style.css';
+import { css } from '../../../../styled-system/css';
 
 interface NotFoundProps {
   title?: string;
@@ -16,11 +16,49 @@ export const NotFound = ({
   linkHref = '/',
 }: NotFoundProps) => {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <h1 className={styles.title}>{title}</h1>
-        <p className={styles.description}>{description}</p>
-        <Link href={linkHref} className={styles.link}>
+    <div className={css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '100vh',
+  padding: '2rem',
+  textAlign: 'center',
+})}>
+      <div className={css({
+  maxWidth: '600px',
+  width: '100%',
+})}>
+        <h1 className={css({
+  fontSize: '2rem',
+  fontWeight: 700,
+  marginBottom: '1rem',
+  '@media (max-width: 768px)': {
+    fontSize: '1.5rem',
+  },
+})}>{title}</h1>
+        <p className={css({
+  fontSize: '1.25rem',
+  marginBottom: '2rem',
+  color: '#6a6c6e',
+  lineHeight: '1.6',
+  '@media (max-width: 768px)': {
+    fontSize: '1rem',
+  },
+})}>{description}</p>
+        <Link href={linkHref} className={css({
+  display: 'inline-block',
+  padding: '0.75rem 1.5rem',
+  backgroundColor: '#b6d0eb',
+  color: 'white',
+  borderRadius: '0.375rem',
+  textDecoration: 'none',
+  fontWeight: 500,
+  transition: 'background-color 0.2s ease',
+  _hover: {
+    opacity: 0.8,
+  },
+})}>
           {linkText}
         </Link>
       </div>

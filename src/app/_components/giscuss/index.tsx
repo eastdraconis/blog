@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import * as styles from './style.css';
+import { css } from '../../../../styled-system/css';
 
 export const Giscus = () => {
   const setGiscus = useCallback(() => {
@@ -36,5 +36,10 @@ export const Giscus = () => {
     setGiscus();
   }, [setGiscus]);
 
-  return <div className={styles.giscus} id='comment-container'></div>;
+  return <div className={css({
+  marginTop: '120px',
+  width: '100%',
+  height: '100%',
+  marginBottom: '80px',
+})} id='comment-container'></div>;
 };

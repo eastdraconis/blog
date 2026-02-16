@@ -8,7 +8,7 @@ import { Post } from '@/app/_domains/post/types/post';
 import { Footer } from '@/app/_components/footer';
 import { Header } from '@/app/_components/header/header';
 import Image from 'next/image';
-import * as styles from './style.css';
+import { css } from '../../../../styled-system/css';
 
 interface PostProps {
   post: Post;
@@ -34,7 +34,12 @@ export const PostView = ({ post }: PostProps) => {
                 height={500}
                 quality={100}
                 priority
-                className={styles.thumbnail}
+                className={css({
+  borderRadius: '30px',
+  marginBottom: '80px',
+  marginInline: 'auto',
+  maxHeight: '500px',
+})}
               />
             )}
             <MDXComponent source={post.content} />

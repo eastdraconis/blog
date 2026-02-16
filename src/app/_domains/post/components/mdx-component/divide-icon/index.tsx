@@ -1,9 +1,11 @@
-import * as styles from './style.css';
+import { css } from '../../../../../../../styled-system/css';
 
 export const DivideIcon = () => {
   return (
     <svg
-      className={styles.icon}
+      className={css({
+  fill: '#adb1ba',
+})}
       width='52px'
       height='52px'
       viewBox='0 0 32 32'

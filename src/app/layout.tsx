@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import '@/app/_styles/global.css';
+import './globals.css';
+import { css } from '../../styled-system/css';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -77,9 +78,14 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ko' className={pretendard.variable}>
+    <html
+      lang='ko'
+      className={`${pretendard.className} ${pretendard.variable}`}
+    >
       <GoogleTagManager gtmId='GTM-PGSGTKHF' />
-      <body>
+      <body
+    
+      >
         {children}
         <Analytics />
         <SpeedInsights />

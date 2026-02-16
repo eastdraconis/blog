@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import { Search } from '../search/search';
-import * as styles from './style.css';
+import { css } from '../../../../../styled-system/css';
 
 export const Menu = () => {
   return (
-    <div className={styles.container}>
+    <div className={css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+})}>
       <Search />
       <Link href='https://github.com/eastdraconis'>
         <GithubIcon />

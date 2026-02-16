@@ -1,5 +1,5 @@
-import * as styles from './style.css';
 import Image from 'next/image';
+import { css } from '../../../../styled-system/css';
 
 const linkList = [
   {
@@ -57,20 +57,64 @@ const linkList = [
 
 export const Profile = () => {
   return (
-    <div className={styles.profileContainer}>
-      <div className={styles.profileImageContainer}>
-        <div className={styles.profileImageInner}>
+    <div className={css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: '200px',
+})}>
+      <div className={css({
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+  width: '140px',
+  height: '140px',
+  position: 'relative',
+  overflow: 'hidden',
+  backgroundColor: '#90cdf4',
+  objectFit: 'cover',
+  borderRadius: '50%',
+  boxShadow: '0 0 0 5px var(--colors-success)',
+})}>
+        <div className={css({
+  width: '100px',
+  height: '100%',
+  transform: 'translate(5px, 30px)',
+  borderRadius: '50%',
+  position: 'relative',
+})}>
           <Image src={'/profile.png'} alt='profile' fill sizes='300px' />
         </div>
       </div>
-      <div className={styles.nameContainer}>
-        <span className={styles.name}>한동룡</span>
+      <div className={css({
+  marginTop: '20px',
+})}>
+        <span className={css({
+  fontSize: '14px',
+  fontWeight: 700,
+})}>한동룡</span>
       </div>
 
-      <div className={styles.iconContainer}>
+      <div className={css({
+  display: 'flex',
+  marginTop: '20px',
+  gap: '10px',
+})}>
         {linkList.map((link, index) => (
           <a key={index} href={link.link} target='_blank'>
-            <div className={styles.iconWrapper}>{link.svg}</div>
+            <div className={css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  transition: 'all 0.2s',
+  _hover: {
+    backgroundColor: 'var(--colors-success)',
+  },
+})}>{link.svg}</div>
           </a>
         ))}
       </div>

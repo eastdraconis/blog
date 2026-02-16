@@ -1,5 +1,5 @@
+import { css } from '../../../../../../styled-system/css';
 import { FilterTag } from './filter-tag';
-import * as styles from './style.css';
 
 interface FilterTagGroupProps {
   tags: string[];
@@ -7,7 +7,11 @@ interface FilterTagGroupProps {
 
 export const FilterTagGroup = ({ tags }: FilterTagGroupProps) => {
   return (
-    <div className={styles.tagContainer}>
+    <div className={css({
+  display: 'flex',
+  gap: '8px',
+  flexWrap: 'wrap',
+})}>
       {tags.map((tag) => (
         <FilterTag key={tag} tag={tag} />
       ))}

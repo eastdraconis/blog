@@ -1,15 +1,57 @@
 'use client';
 
 import { PostCard } from '../post-card';
-import * as styles from './style.css';
 import { EmptyPostList } from './empty-post-list';
 import { Post } from '../../types/post';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { css } from '../../../../../../styled-system/css';
 
 interface PostListProps {
   posts: Post[];
 }
+
+const getPostListClass = (mounted: boolean) => {
+  if (mounted) {
+    return css({
+      display: 'grid',
+      gridTemplateColumns: 'repeat(12, 1fr)',
+      gridColumnGap: '32px',
+      rowGap: '24px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      gridAutoRows: '10px',
+      alignItems: 'start',
+      width: '100%',
+      opacity: 1,
+      transform: 'translateY(0)',
+      transition: 'opacity .2s ease-in-out .3s, transform .5s ease-in-out .3s',
+      '@media (max-width: 700px)': {
+        gridAutoRows: 'auto',
+        rowGap: '32px',
+        gridTemplateColumns: 'repeat(1, 1fr)',
+      },
+    });
+  }
+
+  return css({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridColumnGap: '32px',
+    rowGap: '24px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    gridAutoRows: 'auto',
+    alignItems: 'start',
+    width: '100%',
+    opacity: 0,
+    transform: 'translateY(32px)',
+    '@media (max-width: 700px)': {
+      gridAutoRows: '0',
+      rowGap: '32px',
+      gridTemplateColumns: 'repeat(1, 1fr)',
+    },
+  });
+};
 
 export const PostList = ({ posts }: PostListProps) => {
   const [mounted, setMounted] = useState(false);
@@ -23,7 +65,7 @@ export const PostList = ({ posts }: PostListProps) => {
   }
 
   return (
-    <div className={styles.container({ mounted })}>
+    <div className={getPostListClass(mounted)}>
       {posts.map((post) => (
         <PostCard key={post.slug} {...post} />
       ))}

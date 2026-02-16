@@ -1,10 +1,28 @@
 import Link from 'next/link';
-import * as styles from './header.css';
+import { css } from '../../../../styled-system/css';
 
 export const Logo = () => {
   return (
     <Link href='/'>
-      <span className={styles.logo}>
+      <span className={css({
+  fontSize: '24px',
+  fontWeight: 'bold',
+  lineHeight: 1.55,
+  position: 'relative',
+  display: 'flex',
+  _after: {
+    position: 'absolute',
+    content: '""',
+    height: '2px',
+    bottom: '-1px',
+    left: '0',
+    width: '100%',
+    backgroundColor: 'black',
+    transition: 'transform 0.2s ease-out',
+    transformOrigin: 'bottom right',
+    transform: 'scaleX(0)',
+  },
+})}>
         <svg
           fill='#000000'
           width='32px'
