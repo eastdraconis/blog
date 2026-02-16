@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "prepare": "bun run panda codegen",
-    "dev": "rm -rf .next && bun run next dev",
+    "dev": "rm -rf .next && bun --bun next dev",
     "copy-images": "bun run scripts/copy-images.js",
-    "prebuild": "bun run copy-images && bun run panda:generate",
-    "panda:generate": "bun run panda codegen --clean && bun run panda cssgen --clean --outfile styled-system/styles.css",
-    "build": "bun run next build",
-    "start": "bun run next start",
+    "prebuild": "bun run copy-images && bun run panda codegen",
+    "build": "bun --bun next build",
+    "start": "bun --bun next start",
     "lint": "bun run next lint"
   },
   "dependencies": {
